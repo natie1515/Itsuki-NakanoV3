@@ -22,8 +22,6 @@ let syt = 'https://youtube.com'
 
 global.docs = ['doc1', 'doc2', 'doc3']
 global.nomorown = '573187418668@s.whatsapp.net'
-// global.logo = 'https://raw.githubusercontent.com/WillZek/Storage-CB2/main/images/54dfe27a73cf.jpg'
-// global.iconorcanal = 'https://raw.githubusercontent.com/WillZek/Storage-CB2/main/images/54dfe27a73cf.jpg'
 global.metanombre = 'Meta AI'
 
 global.idchannel = '120363403726798403@newsletter'
@@ -91,8 +89,8 @@ try {
         showAdAttribution: false,
         title: "𝆺𝅥 𝆭 ִ ֗ 🍉 𝐈𝐭𝐬𝐮𝐤𝐢 ┆ 𝐍𝐚𝐤𝐚𝐧𝐨𝐯2 𝐏𝐫𝐞𝐦𝐁𝐨𝐭 ✨ ౨ৎ˚₊‧",
         body: global.author,
-  thumbnail: fs.readFileSync("./src/Images/thumbnail.jpg"),
-  thumbnailUrl: global.pppkecil,
+        thumbnail: fs.readFileSync("./src/Images/thumbnail.jpg"),
+        thumbnailUrl: global.pppkecil,
         sourceUrl: "https://whatsapp.com/channel/0029VbBQ5sf4NVioq39Efn0v",
         mediaType: 1,
         renderLargerThumbnail: false
@@ -113,7 +111,7 @@ try {
         mediaUrl: sgc,
         description: "𝆺𝅥 𝆭 ִ ֗ 🍉 𝐈𝐭𝐬𝐮𝐤𝐢 ┆ 𝐍𝐚𝐤𝐚𝐧𝐨𝐯2 𝐏𝐫𝐞𝐦𝐁𝐨𝐭 ✨ ౨ৎ˚₊‧",
         previewType: "PHOTO",
-  thumbnail: fs.readFileSync("./src/Images/55111188_p0.jpg"),
+        thumbnail: fs.readFileSync("./src/Images/55111188_p0.jpg"),
         sourceUrl: "https://whatsapp.com/channel/0029VbBQ5sf4NVioq39Efn0v",
       }
     }
@@ -136,7 +134,7 @@ try {
         previewType: "PDF",
         sourceUrl: sgc,
         thumbnail: fs.readFileSync("./src/Images/55111188_p0.jpg"),
-        thumbnailUrl: global.logo,
+        thumbnailUrl: AraChu2.getRandom(), // Usando AraChu2 en lugar de global.logo
         title: "👋 " + Sapa() + Pagi()
       }
     }
@@ -151,7 +149,7 @@ try {
         description: "Sigue: " + sig,
         title: "👋 " + Sapa() + Pagi(),
         body: author,
-        thumbnailUrl: global.logo,
+        thumbnailUrl: AraChu2.getRandom(), // Usando AraChu2 en lugar de global.logo
         sourceUrl: sgc
       }
     }
@@ -166,7 +164,7 @@ try {
         description: "Sigue: " + sig,
         title: "👋 " + Sapa() + Pagi(),
         body: author,
-        thumbnailUrl: global.logo,
+        thumbnailUrl: AraChu2.getRandom(), // Usando AraChu2 en lugar de global.logo
         sourceUrl: sgc
       }
     }
@@ -181,7 +179,7 @@ try {
         description: "Sigue: " + sig,
         title: "👋 " + Sapa() + Pagi(),
         body: author,
-        thumbnailUrl: global.logo,
+        thumbnailUrl: AraChu2.getRandom(), // Usando AraChu2 en lugar de global.logo
         sourceUrl: snh
       }
     }
@@ -196,7 +194,7 @@ try {
         description: "Sigue: " + sig,
         title: "👋 " + Sapa() + Pagi(),
         body: author,
-        thumbnailUrl: global.logo,
+        thumbnailUrl: AraChu2.getRandom(), // Usando AraChu2 en lugar de global.logo
         sourceUrl: syt
       }
     }
@@ -223,15 +221,14 @@ try {
 
   global.botname = global.botname || namechannel
 
-  // CORREGIDO: Eliminado el video de YouTube
+  // CORREGIDO: Usando AraChu2 en lugar de global.iconorcanal
   global.rcanal = {
     contextInfo: {
       externalAdReply: {
         title: global.botname,
         mediaType: 1, // Cambiado a PHOTO
         previewType: "PHOTO",
-        thumbnailUrl: global.iconorcanal,
-        // mediaUrl eliminado - ya no enviará video de YouTube
+        thumbnailUrl: AraChu2.getRandom(), // Usando AraChu2 en lugar de global.iconorcanal
         sourceUrl: ""
       }
     }
@@ -365,10 +362,6 @@ try {
   global.doc = pickRandom(["application/vnd.openxmlformats-officedocument.presentationml.presentation", "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "application/vnd.openxmlformats-officedocument.wordprocessingml.document", "application/vnd.ms-excel", "application/msword", "application/pdf", "text/rtf"])
 
   global.thumbnailUrl2 = [
-    'https://files.catbox.moe/2jp3y8.jpg'
-  ]
-
-  global.logo = [
     'https://files.catbox.moe/2jp3y8.jpg'
   ]
 }
