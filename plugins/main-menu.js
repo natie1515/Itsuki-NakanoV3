@@ -56,28 +56,28 @@ let handler = async (m, { conn, usedPrefix: _p }) => {
       {
         name: 'cta_url',
         buttonParamsJson: JSON.stringify({ 
-          display_text: '*☃️ ᴄᴀɴᴀʟ ᴏғɪᴄɪᴀʟ*', 
+          display_text: '☃️ ᴄᴀɴᴀʟ ᴏғɪᴄɪᴀʟ', 
           url: 'https://whatsapp.com/channel/0029VbBvZH5LNSa4ovSSbQ2N' 
         })
       },
       {
         name: 'cta_url',
         buttonParamsJson: JSON.stringify({ 
-          display_text: '*🌨️ ᴄᴏᴍᴜɴɪᴅᴀᴅ ᴏғɪᴄɪᴀʟ*', 
+          display_text: '🌨️ ᴄᴏᴍᴜɴɪᴅᴀᴅ ᴏғɪᴄɪᴀʟ', 
           url: 'https://chat.whatsapp.com/BXxWuamOOE4K9eKC623FIO' 
         })
       },
       {
         name: 'cta_url',
         buttonParamsJson: JSON.stringify({ 
-          display_text: '*💻 ʜᴏsᴛɪɴɢ-ᴏғɪᴄɪᴀʟ*', 
+          display_text: '💻 ʜᴏsᴛɪɴɢ-ᴏғɪᴄɪᴀʟ', 
           url: 'https://dash.quintillisas.com' 
         })
       },
       {
         name: 'cta_url',
         buttonParamsJson: JSON.stringify({ 
-          display_text: '*📲 ᴡᴇʙ ᴏғɪᴄɪᴀʟ-ʙᴏᴛ*', 
+          display_text: '📲 ᴡᴇʙ ᴏғɪᴄɪᴀʟ-ʙᴏᴛ', 
           url: 'https://web.quintillisas.com' 
         })
       }
