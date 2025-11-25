@@ -40,7 +40,7 @@ global.ItsukiJadibts = true
 global.Choso = true
 global.prefix = ['.', '!', '/' , '#', '%']
 global.apikey = 'ItsukiNakanoIA'
-global.botNumber = ''
+global.botNumber = '12345678910'
 // Números y settings globales para varios códigos
 global.packname = '𝗟𝗮 𝗠𝗲𝗷𝗼𝗿 𝗕𝗼𝘁 𝗗𝗲 𝗪𝗵𝗮𝘁𝘀𝗮𝗽𝗽 🫰🏻🤖'
 global.botname = '☃️ 𝙄𝙩𝙨𝙪𝙠𝙞 𝙉𝙖𝙠𝙖𝙣𝙤 𝙉𝙚𝙬 𝙐𝙥 ❄️'
