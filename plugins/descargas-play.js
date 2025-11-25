@@ -2,30 +2,27 @@ import fetch from 'node-fetch'
 import yts from 'yt-search'
 
 let handler = async (m, { conn, text, usedPrefix }) => {
-  const ctxErr = (global.rcanalx || {})
-  const ctxWarn = (global.rcanalw || {})
-  const ctxOk = (global.rcanalr || {})
-
   if (!text) {
-    return conn.reply(m.chat, `
-🎀 Itsuki-Nakano - Descargar Multimedia 🎥✨️
+    return conn.reply(m.chat, 
+`> 🎄 *¡NAVIDAD EN YOUTUBE!* 🎅
 
-📝 Forma de uso:
-• ${usedPrefix}play <nombre de la canción>
+> 🎁 *DESCARGADOR DE AUDIO NAVIDEÑO*
 
-💡 Ejemplos:
-• ${usedPrefix}play unravel Tokyo ghoul
-• ${usedPrefix}play crossing field
+> ❌ *Uso incorrecto*
 
-🎯 Formato disponible:
-🎵 Audio MP3 (alta calidad)
+> \`\`\`Debes proporcionar el nombre de la canción\`\`\`
 
-🌟 ¡Encuentra y descarga tu música favorita! 🎶
-    `.trim(), m, ctxWarn)
+> *Ejemplos navideños:*
+> • ${usedPrefix}play villancicos navideños
+> • ${usedPrefix}play canciones de navidad
+> • ${usedPrefix}play música navideña
+
+> 🎅 *¡Itsuki Nakano V3 descargará tu audio!* 🎄`, m)
   }
 
   try {
-    await conn.reply(m.chat, '*🔎 Itsuki Esta Buscando Tu Audio*', m, ctxOk)
+    await m.react('🎁')
+    await m.react('🕑')
 
     const search = await yts(text)
     if (!search.videos.length) throw new Error('No encontré resultados para tu búsqueda.')
@@ -39,7 +36,7 @@ let handler = async (m, { conn, text, usedPrefix }) => {
         const resp = await fetch(thumbnail)
         thumbBuffer = Buffer.from(await resp.arrayBuffer())
       } catch (err) {
-        console.log('No se pudo obtener la miniatura:', err.message)
+        console.log('🎄 No se pudo obtener la miniatura:', err.message)
       }
     }
 
@@ -64,13 +61,24 @@ let handler = async (m, { conn, text, usedPrefix }) => {
           break
         }
       } catch (err) {
-        console.log(`⚠️ Error con ${fuente.api}:`, err.message)
+        console.log(`🎄 Error con ${fuente.api}:`, err.message)
       }
     }
 
     if (!exito) {
-      await conn.sendMessage(m.chat, { react: { text: "❌", key: m.key } })
-      return conn.reply(m.chat, '*🧋 No se pudo enviar el audio desde ninguna API.*', m, ctxErr)
+      await m.react('❌')
+      return conn.reply(m.chat, 
+`> 🎄 *¡ERROR EN DESCARGA!* 🎅
+
+> ❌ *No se pudo obtener el audio*
+
+> 🔍 *Posibles causas:*
+> • Las APIs están temporalmente fuera de servicio
+> • El contenido podría estar restringido
+> • Problemas de conexión
+
+> 🎅 *Itsuki V3 lo intentará de nuevo...*
+> 🎄 *¡Intenta más tarde!* 🎁`, m)
     }
 
     await conn.sendMessage(
@@ -80,14 +88,30 @@ let handler = async (m, { conn, text, usedPrefix }) => {
         mimetype: 'audio/mpeg',
         ptt: false,
         jpegThumbnail: thumbBuffer,
-        caption: `🎼 ${title} | API: ${apiUsada}`
+        fileName: `audio_navidad.mp3`
       },
       { quoted: m }
     )
 
+    await m.react('✅')
+
   } catch (e) {
-    console.error('❌ Error en play:', e)
-    await conn.reply(m.chat, `❌ Error: ${e.message}`, m, ctxErr)
+    console.error('🎄 Error en play:', e)
+    await conn.reply(m.chat, 
+`> 🎄 *¡ERROR EN DESCARGA!* 🎅
+
+> ❌ *Error al procesar la solicitud*
+
+> 📝 *Detalles:* ${e.message}
+
+> 🔍 *Sugerencias:*
+> • Verifica el nombre de la canción
+> • Intenta con otro término de búsqueda
+> • Espera un momento y vuelve a intentar
+
+> 🎅 *Itsuki V3 lo intentará de nuevo...*
+> 🎄 *¡No te rindas!* 🎁`, m)
+    await m.react('❌')
   }
 }
 
@@ -95,5 +119,6 @@ handler.help = ['play']
 handler.tags = ['downloader']
 handler.command = ['play']
 handler.group = true
+handler.register = false
 
 export default handler
