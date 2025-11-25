@@ -119,6 +119,6 @@ handler.help = ['play']
 handler.tags = ['downloader']
 handler.command = ['play']
 handler.group = true
-handler.register = false
+// handler.register = false
 
 export default handler
