@@ -359,6 +359,21 @@ async function startBot() {
 
   sock.ev.on('connection.update', async (update) => {
     const { connection, lastDisconnect, qr } = update
+    
+    // En la parte donde el bot se conecta, agrega esto:
+    if (connection === 'open') {
+      console.log('✅ Bot conectado exitosamente')
+      
+      // Enviar mensaje de reconexión si hubo un reinicio
+      if (typeof sendReconnectionMessage === 'function') {
+        await sendReconnectionMessage(conn)
+      }
+    }
+    
+    if (connection === 'close') {
+      console.log('❌ Conexión cerrada:', lastDisconnect?.error)
+    }
+
     if (qr && method === 'qr') {
       console.clear()
       console.log(chalk.cyan('Escanea este QR con WhatsApp (Dispositivos vinculados):'))
