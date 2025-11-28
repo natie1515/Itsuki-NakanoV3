@@ -32,7 +32,7 @@ const handler = async (m, { conn, text, command }) => {
     const thumb = await (await fetch(imageUrl)).arrayBuffer();
     await conn.sendMessage(m.chat, { image: Buffer.from(thumb), caption: info }, { quoted: m });
 
-    if (command === 'play') {
+    if (command === 'play5') {
       const res = await fetch(`https://api.vreden.my.id/api/v1/download/youtube/audio?url=${link}&quality=128`);
       const json = await res.json();
 
@@ -54,7 +54,7 @@ const handler = async (m, { conn, text, command }) => {
       await conn.sendMessage(m.chat, { react: { text: '✅', key: m.key } })
     }
 
-    if (command === 'play2') {
+    if (command === 'play6') {
       const res = await fetch(`https://api.vreden.my.id/api/v1/download/youtube/video?url=${link}&quality=360`);
       const json = await res.json();
 
@@ -84,6 +84,6 @@ const handler = async (m, { conn, text, command }) => {
 
 handler.command = ['play5', 'play6'];
 handler.tags = ['downloader'];
-handler.help = ['play <canción navideña>', 'play2 <video navideño>'];
+handler.help = ['play5', 'play6'];
 
 export default handler;
