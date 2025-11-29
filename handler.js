@@ -587,6 +587,7 @@ export async function handler(chatUpdate) {
 
             // Información adicional del sistema simple.js
             const additionalInfo = {
+                // Estas propiedades ya vienen de smsg() y son de solo lectura
                 isBaileys: m.isBaileys || false,
                 mediaMessage: m.mediaMessage || null,
                 mediaType: m.mediaType || null,
@@ -629,10 +630,8 @@ export async function handler(chatUpdate) {
     m.isBotAdmin = isBotAdmin
     m.adminRole = isRAdmin ? 'superadmin' : (isAdmin ? 'admin' : null)
 
-    // Propiedades adicionales de simple.js
-    m.isBaileys = m.isBaileys || false;
-    m.mediaMessage = m.mediaMessage || null;
-    m.mediaType = m.mediaType || null;
+    // NOTA: Las propiedades isBaileys, mediaMessage, mediaType ya vienen definidas desde smsg()
+    // y son de solo lectura. No intentar reasignarlas.
 
     if (!m.name) {
       const guess = await nameOf(m.sender)
