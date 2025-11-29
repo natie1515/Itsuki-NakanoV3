@@ -13,7 +13,7 @@ async function makeFkontak() {
     const thumb2 = Buffer.from(await res.arrayBuffer())
     return {
       key: { participants: '0@s.whatsapp.net', remoteJid: 'status@broadcast', fromMe: false, id: 'Halo' },
-      message: { locationMessage: { name: '*⏳️ Actualización Navideña ❄️*', jpegThumbnail: thumb2 } },
+      message: { locationMessage: { name: '⚙️ 𝐒𝐢𝐬𝐭𝐞𝐦𝐚 𝐀𝐜𝐭𝐮𝐚𝐥𝐢𝐳𝐚𝐝𝐨 ✅', jpegThumbnail: thumb2 } },
       participant: '0@s.whatsapp.net'
     }
   } catch {
@@ -23,9 +23,7 @@ async function makeFkontak() {
 
 let handler = async (m, { conn, args }) => {
   try {
-    // Reacción al iniciar actualización
     await m.react('🔄')
-    await conn.reply(m.chat, '> 🎅 *Itsuki está actualizando con espíritu navideño...* 🎄', m)
 
     const cmd = 'git --no-pager pull --rebase --autostash' + (args?.length ? ' ' + args.join(' ') : '')
     const output = execSync(cmd, { cwd: ROOT, encoding: 'utf8' })
@@ -34,8 +32,7 @@ let handler = async (m, { conn, args }) => {
     const isUpToDate = lower.includes('already up to date') || lower.includes('up to date')
     let response
     if (isUpToDate) {
-      response = `> 🎁 *¡Itsuki ya está actualizada!* 🎄\n\n> ✨ *El bot está al día con las últimas mejoras navideñas* 🎅`
-      // Reacción cuando ya está actualizado
+      response = `> ⓘ *¡Itsuki ya está actualizada!*\n\n> ⓘ *El bot está al día con las últimas mejoras*`
       await m.react('✅')
     } else {
       const changed = []
@@ -45,25 +42,22 @@ let handler = async (m, { conn, args }) => {
         if (m && m[1] && !changed.includes(m[1])) changed.push(m[1])
       }
       const banner = [
-        '> 🎄 *¡ACTUALIZACIÓN NAVIDEÑA EXITOSA!* 🎅',
+        '> ⓘ *¡ACTUALIZACIÓN EXITOSA!*',
         '> ╰─────────────────',
         '',
-        '> 📦 *Archivos actualizados:*',
+        '> ⓘ *Archivos actualizados:*',
         ''
       ]
-      const list = changed.slice(0, 10).map(f => `> 🎁 ${f}`).join('\n') || '> 🎁 *Todos los archivos actualizados*'
-      response = `${banner.join('\n')}\n${list}\n\n> ✨ *¡Itsuki está lista para la navidad!* 🎄`
-      // Reacción cuando se actualizó correctamente
-      await m.react('✅️')
+      const list = changed.slice(0, 10).map(f => `> ⓘ ${f}`).join('\n') || '> ⓘ *Todos los archivos actualizados*'
+      response = `${banner.join('\n')}\n${list}\n\n> ⓘ *¡Itsuki está lista!*`
+      await m.react('✅')
     }
 
     const fq = await makeFkontak().catch(() => null)
     await conn.reply(m.chat, response, fq || m)
   } catch (error) {
-    // Reacción de error
     await m.react('❌')
-    
-    // Intentar detectar archivos con cambios locales o conflictos
+
     try {
       const status = execSync('git status --porcelain', { cwd: ROOT, encoding: 'utf8' }).trim()
       if (status) {
@@ -84,21 +78,20 @@ let handler = async (m, { conn, args }) => {
           ))
 
         if (conflictedFiles.length > 0) {
-          const conflictMsg = '> 🎄 *¡Ops! Conflictos navideños detectados* 🎅\n\n' +
-            '> ❄️ *Archivos con conflictos:*\n\n' +
-            conflictedFiles.map(f => '> 🎄 ' + f.slice(3)).join('\n') +
-            '\n\n> 🎁 *Para solucionar:*\n' +
-            '> • Haz backup de tus cambios\n' +
-            '> • O actualiza manualmente\n\n' +
-            '> ✨ *¡Itsuki quiere ayudarte!* 🎅'
+          const conflictMsg = '> ⓘ *¡Ops! Conflictos detectados*\n\n' +
+            '> ⓘ *Archivos con conflictos:*\n\n' +
+            conflictedFiles.map(f => '> ⓘ ' + f.slice(3)).join('\n') +
+            '\n\n> ⓘ *Para solucionar:*\n' +
+            '> ⓘ • Haz backup de tus cambios\n' +
+            '> ⓘ • O actualiza manualmente'
           return await conn.reply(m.chat, conflictMsg, m)
         }
       }
     } catch {}
 
     const msg = /not a git repository/i.test(error?.message || '')
-      ? '> 🎄 *¡Error Navideño!* 🎅\n\n> ❌ Este directorio no es un repositorio Git.\n> ✨ Inicializa con `git init` y agrega el remoto.'
-      : `> 🎄 *¡Error en la actualización navideña!* 🎅\n\n> ❌ ${error?.message || 'Error desconocido.'}\n\n> ✨ *Itsuki sigue aquí para ayudarte* 🎁`
+      ? '> ⓘ *¡Error!*\n\n> ⓘ Este directorio no es un repositorio Git.\n> ⓘ Inicializa con `git init` y agrega el remoto.'
+      : `> ⓘ *¡Error en la actualización!*\n\n> ⓘ ${error?.message || 'Error desconocido.'}`
     await conn.reply(m.chat, msg, m)
   }
 }
