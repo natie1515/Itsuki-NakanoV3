@@ -40,7 +40,8 @@ const handler = async (m, { conn, args, usedPrefix, command }) => {
   }
 
   if (!mime || !/image\/(jpe?g|png)/i.test(mime)) {
-    return conn.reply(m.chat, `> ⓘ Envía o responde a una imagen JPG/PNG.\n> ⓘ Uso: ${usedPrefix}${command} [2|4|8]`, quotedContact)
+    return conn.reply(m.chat, `Envía o responde a una imagen JPG/PNG.
+Uso: ${usedPrefix}${command} [2|4|8]`, quotedContact)
   }
 
   let buffer
@@ -53,20 +54,20 @@ const handler = async (m, { conn, args, usedPrefix, command }) => {
     try {
       buffer = await conn.downloadMediaMessage(q)
     } catch (err) {
-      return conn.reply(m.chat, `> ⓘ No se pudo descargar la imagen: ${err.message || err}`, quotedContact)
+      return conn.reply(m.chat, `No se pudo descargar la imagen: ${err.message || err}`, quotedContact)
     }
   }
 
   if (!buffer) {
-    return conn.reply(m.chat, '> ⓘ No se pudo obtener la imagen.', quotedContact)
+    return conn.reply(m.chat, 'No se pudo obtener la imagen.', quotedContact)
   }
 
   let scale = parseScale(args)
   if (!VALID_SCALES.has(scale)) {
-    return conn.reply(m.chat, '> ⓘ Escala inválida. Usa 2, 4 u 8.', quotedContact)
+    return conn.reply(m.chat, 'Escala inválida. Usa 2, 4 u 8.', quotedContact)
   }
 
-  await m.react?.('🕑')
+  await m.react?.('⏳')
   try {
     const result = await upscaleWithIloveimg({
       buffer,
@@ -80,6 +81,7 @@ const handler = async (m, { conn, args, usedPrefix, command }) => {
       {
         image: result.buffer,
         mimetype: result.contentType || (/png/i.test(result.fileName) ? 'image/png' : 'image/jpeg'),
+        caption: `✔ Imagen mejorada x${scale}`,
         fileName: result.fileName
       },
       { quoted: quotedContact }
@@ -90,12 +92,12 @@ const handler = async (m, { conn, args, usedPrefix, command }) => {
     const errMsg = err?.response?.status
       ? `Error ${err.response.status}: ${err.response.statusText}`
       : (err?.message || 'Error desconocido')
-    return conn.reply(m.chat, `> ⓘ Fallo al usar IloveIMG: ${errMsg}`, quotedContact)
+    return conn.reply(m.chat, `Fallo al usar IloveIMG: ${errMsg}`, quotedContact)
   }
 }
 
-handler.help = ['hd']
-handler.tags = ['tools']
+handler.help = ['hd <imagen> [2|4|8]', 'upscale <imagen> [escala]']
+handler.tags = ['tools', 'image']
 handler.command = /^(hd|upscale|enhance|iloveimg)$/i
 
 export default handler
