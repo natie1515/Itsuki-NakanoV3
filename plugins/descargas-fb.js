@@ -4,67 +4,50 @@ let handler = async (m, { conn, usedPrefix, command, args }) => {
   try {
     if (!args[0]) {
       return conn.reply(m.chat,
-        `> 🎄 *¡NAVIDAD EN FACEBOOK!* 🎅
+        `> ⓘ USO INCORRECTO
 
-> 🎁 *DESCARGADOR FACEBOOK NAVIDEÑO*
+> ❌ Debes proporcionar un enlace de Facebook
 
-> ❌ *Uso incorrecto*
-
-\`\`\`Debes proporcionar un enlace de Facebook\`\`\`
-
-> *Ejemplos navideños:*
+> 📝 Ejemplos:
 > • ${usedPrefix + command} https://fb.watch/xxxxx
 > • ${usedPrefix}fb https://facebook.com/xxxxx
 
-> *Comandos disponibles:*
+> 💡 Comandos:
 > • ${usedPrefix}fb <url> - Descargar video
-> • ${usedPrefix}fbaudio <url> - Extraer audio
-
-> 🎅 *¡Itsuki Nakano V3 - Tu asistente navideño!* 🎄`, m)
+> • ${usedPrefix}fbaudio <url> - Extraer audio`, m)
     }
 
     const url = args[0]
     if (!url.match(/facebook\.com|fb\.watch/)) {
       return conn.reply(m.chat,
-        `> 🎄 *¡ENLACE INVÁLIDO!* 🎅
+        `> ⓘ ENLACE INVALIDO
 
-> ❌ *URL no válida*
+> ❌ URL no válida
 
-\`\`\`Por favor envía un enlace de Facebook válido\`\`\`
-
-> *Ejemplo correcto:*
+> 💡 Ejemplo correcto:
 > https://fb.watch/xxxxx
-> https://facebook.com/xxxxx
-
-> 🎅 *¡Itsuki V3 necesita un enlace válido!* 🎄`, m)
+> https://facebook.com/xxxxx`, m)
     }
 
-    await m.react('🎁')
-    await m.react('🕑') // Emoji de espera
+    await conn.sendMessage(m.chat, { react: { text: '🔍', key: m.key } })
 
-    // API de mayapi
     const apiUrl = `https://mayapi.ooguy.com/facebook?url=${encodeURIComponent(url)}&apikey=may-f53d1d49`
-    console.log('🎁 Solicitando a API:', apiUrl)
-
     const response = await fetch(apiUrl, {
       timeout: 30000
     })
 
     if (!response.ok) {
-      throw new Error(`Error en la API: ${response.status} - ${response.statusText}`)
+      throw new Error(`Error en la API: ${response.status}`)
     }
 
     const data = await response.json()
-    console.log('📦 Respuesta de API:', data)
 
-    // Verificar diferentes estructuras de respuesta
     if (!data.status) {
       throw new Error('La API no respondió correctamente')
     }
 
     let videoUrl, videoTitle
 
-    // Buscar en diferentes estructuras posibles
     if (data.result && data.result.url) {
       videoUrl = data.result.url
       videoTitle = data.result.title || 'Video de Facebook'
@@ -75,61 +58,41 @@ let handler = async (m, { conn, usedPrefix, command, args }) => {
       videoUrl = data.data.url
       videoTitle = data.data.title || 'Video de Facebook'
     } else {
-      throw new Error('No se encontró URL del video en la respuesta')
+      throw new Error('No se encontró URL del video')
     }
 
-    console.log('🎬 URL del video encontrada:', videoUrl)
-    console.log('📝 Título:', videoTitle)
-
-    // Verificar si es comando de audio
     const isAudioCommand = command.toLowerCase().includes('audio')
 
     if (isAudioCommand) {
-      // Convertir video a audio - SIN MENSAJE
       await conn.sendMessage(m.chat, {
         audio: { url: videoUrl },
         mimetype: 'audio/mpeg',
         fileName: `audio_facebook.mp3`
       }, { quoted: m })
     } else {
-      // Enviar el video directamente desde la URL
       await conn.sendMessage(m.chat, {
         video: { url: videoUrl },
-        caption: `> 🎄 *¡VIDEO DESCARGADO!* 🎅
+        caption: `> ⓘ VIDEO DESCARGADO
 
-> 📹 *Video de Facebook*
-
-> 📝 *Título:* ${videoTitle}
-> 🎬 *Formato:* MP4
-> 🎁 *Calidad:* Original
-
-> 🎅 *¡Itsuki V3 descargó tu video!*
-> 🎄 *¡Feliz Navidad con Itsuki Nakano V3!* 🎁`
+> 📹 ${videoTitle}
+> 🎬 Formato: MP4
+> 🎁 Calidad: Original`
       }, { quoted: m })
     }
 
-    await m.react('✅')
+    await conn.sendMessage(m.chat, { react: { text: '✅', key: m.key } })
 
   } catch (error) {
-    console.error('❌ Error en descarga Facebook:', error)
+    console.error('Error en descarga Facebook:', error)
 
     await conn.reply(m.chat,
-      `> 🎄 *¡ERROR EN DESCARGA!* 🎅
+      `> ⓘ ERROR
 
-> ❌ *Error en la descarga*
+> ❌ ${error.message}
 
-> 📝 *Detalles:* ${error.message}
+> 💡 Verifica el enlace o intenta más tarde`, m)
 
-> 🔍 *Posibles soluciones:*
-> • Verifica que el enlace sea correcto
-> • El video podría ser privado
-> • Intenta con otro enlace
-> • Espera un momento y vuelve a intentar
-
-> 🎅 *Itsuki V3 lo intentará de nuevo...*
-> 🎄 *¡No te rindas!* 🎁`, m)
-
-    await m.react('❌')
+    await conn.sendMessage(m.chat, { react: { text: '❌', key: m.key } })
   }
 }
 
