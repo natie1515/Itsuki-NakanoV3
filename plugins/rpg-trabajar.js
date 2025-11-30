@@ -32,7 +32,7 @@ let handler = async (m, { conn, args, usedPrefix, command, isAdmin, isBotAdmin, 
 
 handler.help = ['work']
 handler.tags = ['economy']
-handler.command = ['work']
+handler.command = ['w']
 handler.group = true
 
 export default handler
