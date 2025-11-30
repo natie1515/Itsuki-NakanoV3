@@ -6,33 +6,21 @@ let handler = async (m, { conn, text, usedPrefix, command }) => {
         await m.react('❓')
         return conn.reply(m.chat,
             `> \`🎯 REACCIONAR CANAL\` 🍙\n\n` +
-            `> \`📝 Uso: ${usedPrefix}${command} @username reacción(es)\`\n\n` +
-            `> \`💡 Ejemplo: ${usedPrefix}${command} @canal 👍 ❤️\`\n\n` +
+            `> \`📝 Uso: ${usedPrefix}${command} reacción(es)\`\n\n` +
+            `> \`💡 Ejemplo: ${usedPrefix}${command} 👍 ❤️\`\n\n` +
             `> \`🎭 Reacciones permitidas: Cualquier emoji\`\n\n` +
             `> \`📚 "Reacciona a la última publicación del canal"\` ✨`,
             m
         )
     }
 
-    const args = text.split(' ')
-    if (args.length < 2) {
-        await m.react('⚠️')
-        return conn.reply(m.chat,
-            `> \`⚠️ FALTAN DATOS\` 🍙\n\n` +
-            `> \`❌ @username + reacciones\`\n\n` +
-            `> \`📚 "Ej: @canal 😂🔥"\` ✨`,
-            m
-        )
-    }
-
-    const canal = args.shift()
-    const reactEmojis = args.join(',') // ← convierte "😂 🔥 😍" en "😂,🔥,😍"
+    const reactEmojis = text.split(' ').join(',') // ← convierte "😂 🔥 😍" en "😂,🔥,😍"
 
     try {
         await m.react('⏳')
 
-        // Crear URL simulada del canal
-        const canalUrl = `https://wa.me/${canal.replace('@', '')}`
+        // URL del canal actual
+        const canalUrl = `https://wa.me/${m.chat}`
 
         const apiUrl =
             `https://api-adonix.ultraplus.click/tools/react?apikey=${global.apikey
@@ -46,8 +34,7 @@ let handler = async (m, { conn, text, usedPrefix, command }) => {
             await m.react('✅')
             conn.reply(m.chat,
                 `> \`✅ REACCIÓN ENVIADA\` 🍙\n\n` +
-                `> \`📢 Canal:\` ${canal}\n` +
-                `> \`🎭 Reacciones:\` ${reactEmojis}\n` +
+                `> \`🎭 Reacciones:\` ${reactEmojis.replace(/,/g, ' ')}\n` +
                 `> \`📄 Publicación:\` Último post\n\n` +
                 `> \`📚 "¡Reacciones aplicadas correctamente!"\` ✨`,
                 m
@@ -57,7 +44,7 @@ let handler = async (m, { conn, text, usedPrefix, command }) => {
             conn.reply(m.chat,
                 `> \`❌ ERROR\` 🍙\n\n` +
                 `> \`📚 No se pudo reaccionar al canal\`\n\n` +
-                `> \`🍙 "Verifica el @username del canal"\` ✨`,
+                `> \`🍙 "Intenta con otras reacciones"\` ✨`,
                 m
             )
         }
