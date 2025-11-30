@@ -1,13 +1,14 @@
 import fetch from 'node-fetch'
 
 let handler = async (m, { conn, text, usedPrefix, command }) => {
+
     if (!text) {
         await m.react('❓')
-        return conn.reply(m.chat, 
+        return conn.reply(m.chat,
             `> \`🎯 REACCIONAR CANAL\` 🍙\n\n` +
-            `> \`📝 Uso: ${usedPrefix}${command} @username reacción\`\n\n` +
-            `> \`💡 Ejemplo: ${usedPrefix}${command} @canal 👍\`\n\n` +
-            `> \`🎭 Reacciones: 👍 ❤️ 🔥 🥰 😂 🤩\`\n\n` +
+            `> \`📝 Uso: ${usedPrefix}${command} @username reacción(es)\`\n\n` +
+            `> \`💡 Ejemplo: ${usedPrefix}${command} @canal 👍 ❤️\`\n\n` +
+            `> \`🎭 Reacciones permitidas: Cualquier emoji\`\n\n` +
             `> \`📚 "Reacciona a la última publicación del canal"\` ✨`,
             m
         )
@@ -16,23 +17,28 @@ let handler = async (m, { conn, text, usedPrefix, command }) => {
     const args = text.split(' ')
     if (args.length < 2) {
         await m.react('⚠️')
-        return conn.reply(m.chat, 
+        return conn.reply(m.chat,
             `> \`⚠️ FALTAN DATOS\` 🍙\n\n` +
-            `> \`❌ @username + reacción\`\n\n` +
-            `> \`📚 "Menciona el canal y la reacción"\` ✨`,
+            `> \`❌ @username + reacciones\`\n\n` +
+            `> \`📚 "Ej: @canal 😂🔥"\` ✨`,
             m
         )
     }
 
-    const [canal, react] = args
-    
+    const canal = args.shift()
+    const reactEmojis = args.join(',') // ← convierte "😂 🔥 😍" en "😂,🔥,😍"
+
     try {
         await m.react('⏳')
-        
-        // Simular URL del último post del canal
+
+        // Crear URL simulada del canal
         const canalUrl = `https://wa.me/${canal.replace('@', '')}`
-        const apiUrl = `https://api-adonix.ultraplus.click/tools/react?apikey=${global.apikey}&post_link=${encodeURIComponent(canalUrl)}&reacts=1`
-        
+
+        const apiUrl =
+            `https://api-adonix.ultraplus.click/tools/react?apikey=${global.apikey
+            }&post_link=${encodeURIComponent(canalUrl)
+            }&reacts=${encodeURIComponent(reactEmojis)}`
+
         const res = await fetch(apiUrl)
         const data = await res.json()
 
@@ -41,9 +47,9 @@ let handler = async (m, { conn, text, usedPrefix, command }) => {
             conn.reply(m.chat,
                 `> \`✅ REACCIÓN ENVIADA\` 🍙\n\n` +
                 `> \`📢 Canal:\` ${canal}\n` +
-                `> \`🎭 Reacción:\` ${react}\n` +
+                `> \`🎭 Reacciones:\` ${reactEmojis}\n` +
                 `> \`📄 Publicación:\` Último post\n\n` +
-                `> \`📚 "¡Reacción agregada al canal!"\` ✨`,
+                `> \`📚 "¡Reacciones aplicadas correctamente!"\` ✨`,
                 m
             )
         } else {
@@ -55,6 +61,7 @@ let handler = async (m, { conn, text, usedPrefix, command }) => {
                 m
             )
         }
+
     } catch (e) {
         await m.react('❌')
         conn.reply(m.chat,
