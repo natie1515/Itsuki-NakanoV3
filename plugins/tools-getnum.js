@@ -137,7 +137,7 @@ ${cleanContent}`
                                       {
                                           name: "cta_copy",
                                           buttonParamsJson: JSON.stringify({
-                                              display_text: "🫟 𝗖𝗼𝗽𝗶𝗮𝗿 𝗖𝗼́𝗱𝗶𝗴𝗼",
+                                              display_text: "📋 𝗖𝗼𝗽𝗶𝗮𝗿 𝗖𝗼́𝗱𝗶𝗴𝗼",
                                               id: "copy_otp",
                                               copy_code: otpClean 
                                           })
