@@ -703,7 +703,8 @@ global.dfail = (type, m, conn, usedPrefix = global.prefix || '.') => {
     if (msg) return conn.reply(m.chat, msg, m, global.rcanal).then(_ => m.react('❌️'))
 }
 
-let file = global.__filename(import.meta.url, true)
+// CORRECCIÓN: Cambiar global.__filename por fileURLToPath
+let file = fileURLToPath(import.meta.url)
 watchFile(file, async () => {
     unwatchFile(file)
     console.log(chalk.magenta("Se actualizo 'handler.js'"))
