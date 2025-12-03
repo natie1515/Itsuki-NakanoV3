@@ -19,7 +19,47 @@
 
 </div>
 
+# 🍒 **ItsukiBot - Versión V3**  
+## *¡Asombroso con nuevas opciones!*  
 
+## 🚀 **Novedades Principales**  
+### 🌟 **Sistema de Economía Mejorado**    
+- 🎮 **Más juegos y actividades**: Nuevas formas de ganar monedas.  
+- 💰 **Sistema de recompensas mejorado**.  
+
+## ⚙️ **Comandos Nuevos y Mejorados**  
+### 🔧 **Configuración Avanzada**  
+- `setprefix <prefijo>`: Establece un prefijo personalizado.   
+- `onlyadmin on/off`: Restringe comandos solo a admins.  
+- `rootowner <acción>`: Comandos exclusivos del propietario.  
+- `Nuevos Comando como un ultra hd para mejorar la calidad alta
+- `Nuevos Plays De Descarga 14 plays con alta calidad todos foncionales
+
+### 📱 **Información y Utilidades**  
+- `getnum <@usuario>`: Obtiene número de WhatsApp con permisos.  
+- `hd`: Muestra rendimiento del bot en tiempo real.  
+- `sysinfo`: Estadísticas detalladas del sistema.  
+
+### 👥 **Gestión de Grupos Mejorada**  
+- `kick <@usuario>`: Expulsión con registros mejorados.  
+- `add <número>`: Añade usuarios por número.  
+- `groupconfig`: Panel de configuración visual.  
+
+## 🛡️ **Sistemas de Seguridad y Control**  
+### 👑 **OnlyAdmin Mode**  
+- Comandos críticos restringidos a administradores.  
+- Panel de control en tiempo real.  
+
+### 🌱 **RootOwner System**  
+- Acceso total a configuraciones globales.  
+- Decisiones automatizadas según reglas.  
+
+
+## ⚡ **Rendimiento y Optimización**  
+- ✅ **Código optimizado** para mayor velocidad.  
+- ✅ **Gestión de memoria mejorada**.  
+- ✅ **Sistema multi-prefijo eficiente**.  
+- ✅ **Respuesta rápida** en grupos grandes.  
 
 
  <img src="https://github.com/BrayanOFC-Li/Lines-Neon-MB/raw/main/assets_MB/line-neon.gif" width="400"/>
