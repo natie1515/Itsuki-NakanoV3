@@ -19,6 +19,9 @@ let handler = async (m, { conn, usedPrefix }) => {
     let user = global.db.data.users[who];
     let name = conn.getName(who);
     let premium = user.premium ? 'ⓘ `MIEMBRO DE LA NOBLEZA IMPERIAL`' : 'ⓘ `PLEBEYO DEL IMPERIO`';
+    
+    // ⓘ Definir currency aquí mismo para evitar errores
+    const currency = 'Coins';
     let moneda = '¥';
 
     let text = 
