@@ -77,7 +77,7 @@ let handler = async (m, { conn, usedPrefix: _p }) => {
         name: 'cta_url',
         buttonParamsJson: JSON.stringify({ 
           display_text: '💻 Hosting Oficial', 
-          url: 'https://dash.quintillisas.com'
+          url: ''
         })
       }
     ]
@@ -123,7 +123,7 @@ async function makeFkontak() {
     const thumb2 = Buffer.from(await res.arrayBuffer())
     return {
       key: { participants: '0@s.whatsapp.net', remoteJid: 'status@broadcast', fromMe: false, id: 'Halo' },
-      message: { locationMessage: { name: '☃️ 𝗠𝗲𝗻𝘂 𝗔𝗰𝘁𝘂𝗮𝗹𝗶𝘇𝗮𝗱𝗼 🧋', jpegThumbnail: thumb2 } },
+      message: { locationMessage: { name: '☃️ 𝗠𝗲𝗻𝘂 𝗔𝗰𝘁𝘂𝗮𝗹𝗶𝘇𝗮𝗱𝗼 ', jpegThumbnail: thumb2 } },
       participant: '0@s.whatsapp.net'
     }
   } catch {
