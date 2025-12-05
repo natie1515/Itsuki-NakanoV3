@@ -3,17 +3,17 @@ import fetch from 'node-fetch'
 let handler = async (m, { conn, text }) => {
   if (!text) return m.reply('Escribe algo')
   
-  const key = 'sk-6ec6c48f041c4f7da3d012883ab871a9'
+  const key = ''
   
-  // Petición MÍNIMA
-  const res = await fetch('https://api.deepseek.com/chat/completions', {
+  // Petición MÍNIMA a Groq
+  const res = await fetch('https://api.groq.com/openai/v1/chat/completions', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
       'Authorization': `Bearer ${key}`
     },
     body: JSON.stringify({
-      model: 'deepseek-chat',
+      model: 'llama3-8b-8192',
       messages: [{ role: 'user', content: text }],
       max_tokens: 20
     })
