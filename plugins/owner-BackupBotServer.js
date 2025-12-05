@@ -55,10 +55,73 @@ async function copyTree(src, dst, includeSessions) {
 }
 
 async function zipFolderWin(sourceDir, zipPath) {
-  const destPS = zipPath.replace(/'/g, "''")
-  const script = `$ErrorActionPreference='Stop'; $dest='${destPS}'; if (Test-Path -LiteralPath $dest) { Remove-Item -LiteralPath $dest -Force }; $items = Get-ChildItem -Force | Select-Object -ExpandProperty FullName; Compress-Archive -Path $items -DestinationPath $dest -Force`
-  const cmd = `powershell -NoProfile -Command "${script.replace(/"/g, '`"')}"`
-  execSync(cmd, { cwd: sourceDir, stdio: 'inherit' })
+  try {
+    // Usar una ruta sin comillas en el script de PowerShell
+    const destPath = zipPath.replace(/'/g, "''").replace(/"/g, '`"')
+    const sourcePath = sourceDir.replace(/'/g, "''").replace(/"/g, '`"')
+    
+    // Crear un script de PowerShell más robusto
+    const script = `
+      $ErrorActionPreference = 'Stop'
+      Set-Location -LiteralPath '${sourcePath}'
+      $dest = '${destPath}'
+      
+      # Eliminar archivo existente si existe
+      if (Test-Path -LiteralPath $dest) {
+        Remove-Item -LiteralPath $dest -Force
+      }
+      
+      # Obtener todos los archivos y carpetas en el directorio actual
+      $items = Get-ChildItem -Force | Select-Object -ExpandProperty FullName
+      
+      # Comprimir
+      try {
+        Compress-Archive -Path $items -DestinationPath $dest -Force -CompressionLevel Optimal
+        Write-Output "Compression successful: $dest"
+      } catch {
+        Write-Error "Compression failed: $_"
+        exit 1
+      }
+    `.replace(/\n\s+/g, ' ').trim()
+    
+    // Ejecutar con comando más seguro
+    const cmd = `powershell -NoProfile -ExecutionPolicy Bypass -Command "${script}"`
+    console.log('Executing PowerShell command...')
+    
+    execSync(cmd, { 
+      cwd: sourceDir, 
+      stdio: ['pipe', 'pipe', 'pipe'],
+      encoding: 'utf8',
+      timeout: 300000 // 5 minutos timeout
+    })
+    
+    return zipPath
+  } catch (error) {
+    console.error('PowerShell compression error:', error.message)
+    
+    // Intentar método alternativo si el primero falla
+    try {
+      console.log('Trying alternative compression method...')
+      const archiver = await import('archiver')
+      const fs = await import('fs')
+      
+      return new Promise((resolve, reject) => {
+        const output = fs.createWriteStream(zipPath)
+        const archive = archiver.create('zip', {
+          zlib: { level: 9 }
+        })
+        
+        output.on('close', () => resolve(zipPath))
+        archive.on('error', reject)
+        
+        archive.pipe(output)
+        archive.directory(sourceDir, false)
+        archive.finalize()
+      })
+    } catch (altError) {
+      throw new Error(`Both compression methods failed: ${error.message} | ${altError.message}`)
+    }
+  }
 }
 
 async function zipFolderUnix(sourceDir, zipPath) {
@@ -170,14 +233,14 @@ let handler = async (m, { conn, args }) => {
 
 ⚔️ *𝑰𝒏𝒊𝒄𝒊𝒂𝒏𝒅𝒐 𝒄𝒐𝒎𝒑𝒓𝒆𝒔𝒊ó𝒏 𝒅𝒆 𝒂𝒓𝒄𝒉𝒊𝒗𝒐𝒔*
 ╰─▸ *𝑪𝒐𝒏𝒇𝒊𝒈𝒖𝒓𝒂𝒄𝒊ó𝒏:*
-   • 𝑴é𝒕𝒐𝒅𝒐: ${process.platform === 'win32' ? '𝑷𝒐𝒘𝒆𝒓𝑺𝒉𝒆𝒍𝒍 𝑪𝒐𝒎𝒑𝒓𝒆𝒔𝒔-𝑨𝒓𝒄𝒉𝒊𝒗𝒆' : '𝒛𝒊𝒑/𝒕𝒂𝒓'}
-   • 𝑭𝒐𝒓𝒎𝒂𝒕𝒐 𝒅𝒆𝒔𝒕𝒊𝒏𝒐: ${process.platform === 'win32' ? '𝒁𝑰𝑷' : '𝒁𝑰𝑷 (𝒓𝒆𝒔𝒆𝒓𝒗𝒂: 𝑻𝑨𝑹.𝑮𝒁)'}
+   • 𝑴é𝒕𝒐𝒅𝒐: ${process.platform === 'win32' ? '𝑷𝒐𝒘𝒆𝒓𝑺𝒉𝒆𝒍𝒍 (𝑹𝒐𝒃𝒖𝒔𝒕𝒐)' : '𝒛𝒊𝒑/𝒕𝒂𝒓'}
+   • 𝑭𝒐𝒓𝒎𝒂𝒕𝒐 𝒅𝒆𝒔𝒕𝒊𝒏𝒐: 𝒁𝑰𝑷
    • 𝑼𝒃𝒊𝒄𝒂𝒄𝒊ó𝒏: ${artifact}
 
 👑 *"𝑳𝒂 𝒆𝒇𝒊𝒄𝒊𝒆𝒏𝒄𝒊𝒂 𝒆𝒔 𝒆𝒍 𝒂𝒓𝒕𝒆 𝒅𝒆 𝒐𝒃𝒕𝒆𝒏𝒆𝒓 𝒆𝒍 𝒎á𝒙𝒊𝒎𝒐 𝒓𝒆𝒔𝒖𝒍𝒕𝒂𝒅𝒐 𝒄𝒐𝒏 𝒆𝒍 𝒎í𝒏𝒊𝒎𝒐 𝒓𝒆𝒔𝒐𝒖𝒓𝒔𝒐."*`, m)
     
     if (process.platform === 'win32') {
-      await zipFolderWin(exportDir, zipPath)
+      artifact = await zipFolderWin(exportDir, zipPath)
     } else {
       artifact = await zipFolderUnix(exportDir, zipPath)
     }
@@ -263,21 +326,45 @@ let handler = async (m, { conn, args }) => {
 
   } catch (e) {
     await conn.sendMessage(m.chat, { react: { text: '❌', key: m.key } })
+    
+    // Mensaje de error más detallado
+    const errorMessage = e.message || 'Error desconocido'
+    const errorPhase = e.message.includes('PowerShell') || e.message.includes('Compress-Archive') 
+      ? '𝑭𝒂𝒔𝒆 2 (𝑪𝒐𝒎𝒑𝒓𝒆𝒔𝒊ó𝒏)' 
+      : '𝑭𝒂𝒔𝒆 3 (𝑬𝒏𝒗í𝒐)'
+    
     await conn.reply(m.chat, 
 `┏━━━━━━━━━━━━━━━━━━━━━┓
-┃  ⓘ 𝑬𝑹𝑹𝑶𝑹: 𝑭𝑰𝑵𝑨𝑳 ┃
+┃  ⓘ 𝑬𝑹𝑹𝑶𝑹: 𝑪𝑹Í𝑻𝑰𝑪𝑶 ┃
 ┗━━━━━━━━━━━━━━━━━━━━━┛
 
 ❌ *𝑭𝑨𝑳𝑳𝑶 𝑬𝑵 𝑬𝑳 𝑷𝑹𝑶𝑪𝑬𝑺𝑶 𝑫𝑬 𝑹𝑬𝑺𝑷𝑨𝑳𝑫𝑶*
-╰─▸ *𝑫𝒆𝒕𝒂𝒍𝒍𝒆𝒔 𝒅𝒆𝒍 𝒆𝒓𝒓𝒐𝒓:*
-   • 𝑬𝒓𝒓𝒐𝒓: ${e.message}
-   • 𝑭𝒂𝒔𝒆 𝒇𝒂𝒍𝒍𝒂𝒅𝒂: 𝑭𝒂𝒔𝒆 3 (𝑬𝒏𝒗í𝒐)
+╰─▸ *𝑫𝒊𝒂𝒈𝒏ó𝒔𝒕𝒊𝒄𝒐:*
+   • 𝑭𝒂𝒔𝒆 𝒇𝒂𝒍𝒍𝒂𝒅𝒂: ${errorPhase}
+   • 𝑬𝒓𝒓𝒐𝒓: ${errorMessage.substring(0, 200)}
+   • 𝑷𝒍𝒂𝒕𝒂𝒇𝒐𝒓𝒎𝒂: ${process.platform}
 
 💀 *"𝑯𝒂𝒔𝒕𝒂 𝒆𝒍 𝒑𝒍𝒂𝒏 𝒎á𝒔 𝒑𝒆𝒓𝒇𝒆𝒄𝒕𝒐 𝒑𝒖𝒆𝒅𝒆 𝒇𝒂𝒍𝒍𝒂𝒓 𝒇𝒓𝒆𝒏𝒕𝒆 𝒂 𝒍𝒂 𝒊𝒎𝒑𝒓𝒆𝒗𝒊𝒔𝒊ó𝒏."*
-🔸 𝑳𝒐𝒔 𝒂𝒓𝒄𝒉𝒊𝒗𝒐𝒔 𝒕𝒆𝒎𝒑𝒐𝒓𝒂𝒍𝒆𝒔 𝒔𝒆 𝒆𝒍𝒊𝒎𝒊𝒏𝒂𝒓á𝒏 𝒂𝒖𝒕𝒐𝒎á𝒕𝒊𝒄𝒂𝒎𝒆𝒏𝒕𝒆.`, m)
+
+🔸 *𝑺𝒐𝒍𝒖𝒄𝒊𝒐𝒏𝒆𝒔 𝒑𝒐𝒔𝒊𝒃𝒍𝒆𝒔:*
+1. 𝑽𝒆𝒓𝒊𝒇𝒊𝒄𝒂𝒓 𝒑𝒆𝒓𝒎𝒊𝒔𝒐𝒔 𝒅𝒆 𝒆𝒔𝒄𝒓𝒊𝒕𝒖𝒓𝒂 𝒆𝒏: ${TEMP}
+2. 𝑨𝒔𝒆𝒈ú𝒓𝒂𝒕𝒆 𝒅𝒆 𝒕𝒆𝒏𝒆𝒓 𝒆𝒔𝒑𝒂𝒄𝒊𝒐 𝒔𝒖𝒇𝒊𝒄𝒊𝒆𝒏𝒕𝒆 𝒆𝒏 𝒅𝒊𝒔𝒄𝒐
+3. 𝑼𝒔𝒂𝒓 𝒖𝒏 𝒏𝒐𝒎𝒃𝒓𝒆 𝒅𝒆 𝒂𝒓𝒄𝒉𝒊𝒗𝒐 𝒎á𝒔 𝒄𝒐𝒓𝒕𝒐 𝒄𝒐𝒏: --name=backup
+4. 𝑰𝒏𝒕𝒆𝒏𝒕𝒂𝒓 𝒅𝒆𝒔𝒅𝒆 𝒖𝒏𝒂 𝒓𝒖𝒕𝒂 𝒎á𝒔 𝒄𝒐𝒓𝒕𝒂 (𝒆𝒋: C:\\Bot)`, m)
   } finally {
-    try { await fsp.rm(exportDir, { recursive: true, force: true }) } catch {}
-    try { await fsp.rm(artifact, { force: true }) } catch {}
+    // Limpieza
+    try { 
+      await fsp.rm(exportDir, { recursive: true, force: true }) 
+      console.log('Temporary directory cleaned:', exportDir)
+    } catch (cleanError) {
+      console.warn('Warning: Could not clean temp directory:', cleanError.message)
+    }
+    try { 
+      await fsp.rm(artifact, { force: true }) 
+      console.log('Temporary zip cleaned:', artifact)
+    } catch (cleanError) {
+      console.warn('Warning: Could not clean temp zip:', cleanError.message)
+    }
   }
 }
 
