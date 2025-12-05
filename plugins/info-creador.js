@@ -4,7 +4,7 @@ let handler = async (m, { conn }) => {
   try {
     await conn.sendMessage(m.chat, { react: { text: '👑', key: m.key } })
 
-    const menuText = `> *@Hola, soy Jared, Owner de Itsuki Nakano V3*\n\n> ᴇʟɪɢᴇ ᴄóᴍᴏ ǫᴜɪᴇʀᴇs ᴄᴏɴᴛᴀᴄᴛᴀʀᴍᴇ 🧃:`
+    const menuText = `> *@Hola, soy Jared, Owner de Itsuki Nakano V3*\n\n> ᴇʟɪɢᴇ ᴄóᴍᴏ ǫᴜɪᴇʀᴇs ᴄᴏɴᴛᴀᴄᴛᴀʀᴍᴇ :`
 
     const imageUrl = 'https://cdn.russellxz.click/892b3d23.jpg'
 
@@ -13,26 +13,23 @@ let handler = async (m, { conn }) => {
         name: 'cta_url',
         buttonParamsJson: JSON.stringify({ 
           display_text: 'Instagram 📸', 
-          url: 'https://www.instagram.com/naayz01s' 
+          url: 'https://www.instagram.com/jared.nnnn'  // ← Instagram actualizado
         })
       },
       {
         name: 'cta_url',
         buttonParamsJson: JSON.stringify({ 
           display_text: 'Owner 👑', 
-          url: 'https://wa.me/593994524688' 
-        })
-      },
-      {
-        name: 'cta_url',
-        buttonParamsJson: JSON.stringify({ 
-          display_text: 'Donación ❤️‍🩹', 
-          url: 'https://paypal.me/Erenxs01' 
+          url: 'https://wa.me/593994524688'
         })
       }
     ]
 
-    const media = await prepareWAMessageMedia({ image: { url: imageUrl } }, { upload: conn.waUploadToServer })
+    const media = await prepareWAMessageMedia(
+      { image: { url: imageUrl } }, 
+      { upload: conn.waUploadToServer }
+    )
+
     const header = proto.Message.InteractiveMessage.Header.fromObject({
       hasMediaAttachment: true,
       imageMessage: media.imageMessage
@@ -46,10 +43,12 @@ let handler = async (m, { conn }) => {
       })
     })
 
-    const msg = generateWAMessageFromContent(m.chat, { interactiveMessage }, { 
-      userJid: conn.user.jid, 
-      quoted: m 
-    })
+    const msg = generateWAMessageFromContent(
+      m.chat, 
+      { interactiveMessage }, 
+      { userJid: conn.user.jid, quoted: m }
+    )
+
     await conn.relayMessage(m.chat, msg.message, { messageId: msg.key.id })
 
   } catch (e) {
