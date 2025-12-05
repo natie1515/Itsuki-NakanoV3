@@ -4,15 +4,17 @@ import Jimp from 'jimp'
 
 let handler = async (m, { conn, text, usedPrefix, command }) => {
   if (!text) {
-    return conn.reply(m.chat, `> ⓘ USO INCORRECTO
+    return conn.reply(m.chat,
+`┏━━━━━━━━━━━━━━━━━━━━━┓
+┃  ⓘ INSTRUCCIONES ┃
+┗━━━━━━━━━━━━━━━━━━━━━┛
 
-> ❌ Debes ingresar el nombre de la aplicación
+> Uso: ${usedPrefix}apk2 <nombre>
 
-> 📝 Ejemplos:
-> • ${usedPrefix + command} WhatsApp
-> • ${usedPrefix + command} TikTok
+> Ejemplo: ${usedPrefix}apk2 WhatsApp
+> Ejemplo: ${usedPrefix}apk2 TikTok
 
-> 💡 Busca y descarga APKs desde Aptoide`, m)
+> Busca y descarga APKs desde Aptoide.`, m)
   }
 
   try {
@@ -21,32 +23,39 @@ let handler = async (m, { conn, text, usedPrefix, command }) => {
     let searchA = await search(text)
     if (!searchA.length) {
       await conn.sendMessage(m.chat, { react: { text: '❌', key: m.key } })
-      return conn.reply(m.chat, `> ⓘ SIN RESULTADOS
+      return conn.reply(m.chat,
+`┏━━━━━━━━━━━━━━━━━━━━━┓
+┃  ⓘ SIN RESULTADOS ┃
+┗━━━━━━━━━━━━━━━━━━━━━┛
 
-> ❌ No se encontraron aplicaciones para: ${text}
-
-> 💡 Verifica la ortografía o usa otro nombre`, m)
+> No se encontraron aplicaciones para: ${text}
+> Verifica el nombre o intenta con otro.`, m)
     }
 
     let data5 = await download(searchA[0].id)
 
-    let txt = `> ⓘ INFORMACION APK
+    let txt = 
+`┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
+┃  ⓘ INFORMACIÓN DE APK ┃
+┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛
 
-> 📱 ${data5.name}
-> 📦 ${data5.package}
-> 📅 ${data5.lastup}
-> 💾 ${data5.size}`
+> Nombre: ${data5.name}
+> Paquete: ${data5.package}
+> Actualización: ${data5.lastup}
+> Tamaño: ${data5.size}`
 
     await conn.sendFile(m.chat, data5.icon, 'thumbnail.jpg', txt, m)
 
     if (data5.size.includes('GB') || parseFloat(data5.size.replace(' MB', '')) > 999) {
       await conn.sendMessage(m.chat, { react: { text: '❌', key: m.key } })
-      return conn.reply(m.chat, `> ⓘ ARCHIVO DEMASIADO GRANDE
+      return conn.reply(m.chat,
+`┏━━━━━━━━━━━━━━━━━━━━━┓
+┃  ⓘ ARCHIVO DEMASIADO GRANDE ┃
+┗━━━━━━━━━━━━━━━━━━━━━┛
 
-> ❌ El archivo pesa: ${data5.size}
-
-> 💡 Límite máximo: 999 MB
-> 💡 Busca una versión más ligera`, m)
+> Tamaño: ${data5.size}
+> Límite máximo: 999 MB
+> Busca una versión más ligera.`, m)
     }
 
     let thumbnail = null
@@ -55,7 +64,7 @@ let handler = async (m, { conn, text, usedPrefix, command }) => {
       img.resize(300, Jimp.AUTO)
       thumbnail = await img.getBufferAsync(Jimp.MIME_JPEG)
     } catch (err) {
-      console.log('Error al crear miniatura:', err)
+      console.log('Error miniatura:', err)
     }
 
     await conn.sendMessage(
@@ -64,11 +73,14 @@ let handler = async (m, { conn, text, usedPrefix, command }) => {
         document: { url: data5.dllink },
         mimetype: 'application/vnd.android.package-archive',
         fileName: `${data5.name}.apk`,
-        caption: `> ⓘ APK DESCARGADA
+        caption: 
+`┏━━━━━━━━━━━━━━━━━━━━━┓
+┃  ⓘ APK DESCARGADA ┃
+┗━━━━━━━━━━━━━━━━━━━━━┛
 
-> 📱 ${data5.name}
-> 📦 ${data5.package}
-> 💾 ${data5.size}`,
+> Nombre: ${data5.name}
+> Paquete: ${data5.package}
+> Tamaño: ${data5.size}`,
         ...(thumbnail ? { jpegThumbnail: thumbnail } : {})
       },
       { quoted: m }
@@ -79,16 +91,18 @@ let handler = async (m, { conn, text, usedPrefix, command }) => {
   } catch (error) {
     console.error(error)
     await conn.sendMessage(m.chat, { react: { text: '❌', key: m.key } })
-    return conn.reply(m.chat, `> ⓘ ERROR
+    return conn.reply(m.chat,
+`┏━━━━━━━━━━━━━━━━━━━━━┓
+┃  ⓘ ERROR ┃
+┗━━━━━━━━━━━━━━━━━━━━━┛
 
-> ❌ ${error.message || 'Error al procesar la descarga'}
-
-> 💡 Verifica el nombre o intenta más tarde`, m)
+> Error: ${error.message || 'Error al procesar'}
+> Verifica el nombre o intenta más tarde.`, m)
   }
 }
 
 handler.tags = ['downloader']
-handler.help = ['modoapk']
+handler.help = ['apk2 <nombre>']
 handler.command = ['modapk2', 'apk2']
 handler.group = true
 
