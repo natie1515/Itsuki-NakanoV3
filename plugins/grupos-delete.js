@@ -1,6 +1,11 @@
 let handler = async (m, { conn, isGroup }) => {
   if (!m.quoted)
-    return conn.reply(m.chat, '> Cita el mensaje que deseas eliminar.', m)
+    return conn.reply(m.chat, 
+`┏━━━━━━━━━━━━━━━━━━━━━┓
+┃  ⓘ INSTRUCCIONES ┃
+┗━━━━━━━━━━━━━━━━━━━━━┛
+
+> Cita el mensaje a eliminar.`, m)
 
   try {
     const botJid = conn.decodeJid(conn.user.id)
@@ -12,7 +17,12 @@ let handler = async (m, { conn, isGroup }) => {
     const participant = quoted.participant || quotedJid
 
     if (!stanzaId || !participant)
-      return conn.reply(m.chat, '✧ No pude identificar el mensaje a eliminar.', m)
+      return conn.reply(m.chat, 
+`┏━━━━━━━━━━━━━━━━━━━━━┓
+┃  ⓘ ERROR ┃
+┗━━━━━━━━━━━━━━━━━━━━━┛
+
+> No se pudo identificar el mensaje.`, m)
 
     if (quotedJid === botJid) {
       // Eliminar mensaje propio
@@ -29,10 +39,20 @@ let handler = async (m, { conn, isGroup }) => {
         const isAdmin = jid => participants.some(p => p.id === jid && /admin|superadmin/i.test(p.admin || ''))
 
         if (!isAdmin(senderJid))
-          return conn.reply(m.chat, '${emoji} Solo los administradores pueden borrar mensajes de otros usuarios.', m)
+          return conn.reply(m.chat, 
+`┏━━━━━━━━━━━━━━━━━━━━━┓
+┃  ⓘ PERMISO DENEGADO ┃
+┗━━━━━━━━━━━━━━━━━━━━━┛
+
+> Solo administradores pueden eliminar mensajes ajenos.`, m)
 
         if (!isAdmin(botJid))
-          return conn.reply(m.chat, '${emoji} Necesito ser administrador para borrar mensajes de otros usuarios.', m)
+          return conn.reply(m.chat, 
+`┏━━━━━━━━━━━━━━━━━━━━━┓
+┃  ⓘ FALTA DE PERMISOS ┃
+┗━━━━━━━━━━━━━━━━━━━━━┛
+
+> Necesito ser administrador para esta acción.`, m)
       }
       await conn.sendMessage(m.chat, {
         delete: {
@@ -44,8 +64,14 @@ let handler = async (m, { conn, isGroup }) => {
       })
     }
   } catch (err) {
-    console.error('[${emoji} ERROR delete]', err)
-    conn.reply(m.chat, '${emoji} No se pudo eliminar el mensaje. WhatsApp podría estar limitando esta acción.', m)
+    console.error('[ERROR delete]', err)
+    conn.reply(m.chat, 
+`┏━━━━━━━━━━━━━━━━━━━━━┓
+┃  ⓘ FALLO ┃
+┗━━━━━━━━━━━━━━━━━━━━━┛
+
+> No se pudo eliminar el mensaje.
+> WhatsApp puede limitar esta acción.`, m)
   }
 }
 
