@@ -1,27 +1,63 @@
-import fetch from "node-fetch";
+import fetch from 'node-fetch'
 
-let handler = async (m, { conn, text, usedPrefix, command }) => {
-  if (!text) {
-    return conn.reply(m.chat, `🌸 ¡Hola! ¿cómo puedo ayudarte hoy?`, m, rcanal);
-  }
+let handler = async (m, { conn, usedPrefix, command, text }) => {
+    // Definiciones de contexto sin emojis (simulando objetos de respuesta global)
+    const ctxErr = (global.rcanalx || {})
+    const ctxOk = (global.rcanalr || {})
 
-  try {
-    const url = `https://api.kirito.my/api/chatgpt?q=${encodeURIComponent(text)}&apikey=by_deylin`;
-    const res = await fetch(url);
-    const data = await res.json();
-
-    if (!data || !data.response) {
-      return conn.reply(m.chat, "❌ No recibí respuesta de la IA, intenta de nuevo.", m, fake);
+    if (!text) {
+        // Notificación de fallo: X
+        await conn.sendMessage(m.chat, { react: { text: 'X', key: m.key } })
+        return conn.reply(m.chat, `ATENCIÓN: Se requiere un protocolo de consulta.
+*FORMATO REQUERIDO:* [Modelo-IA] [Consulta]
+*Ejemplo:* ${usedPrefix + command} gpt-5-nano ¿Cuál es el código Geass?`, m, ctxErr)
     }
 
-    await conn.reply(m.chat, `${data.response}`, m, rcanal);
-  } catch (e) {
-    console.error(e);
-    await conn.reply(m.chat, "⚠️ Hubo un error al conectar con la IA.", m, fake);
-  }
-};
+    let args = text.split(' ')
+    let model = args.shift().toLowerCase()
+    const question = args.join(' ')
 
-handler.tags = ["ia"];
-handler.command = handler.help =['gpt', 'chatgpt']
+    const modelosDisponibles = ['gpt-5-nano', 'claude', 'gemini', 'deepseek', 'grok', 'meta-ai', 'qwen']
 
-export default handler;
+    if (!modelosDisponibles.includes(model)) {
+        // Notificación de fallo: X
+        await conn.sendMessage(m.chat, { react: { text: 'X', key: m.key } })
+        return conn.reply(m.chat, `MODELO INVÁLIDO. La identidad solicitada no existe en el sistema.
+*Identidades disponibles:* ${modelosDisponibles.join(', ')}`, m, ctxErr)
+    }
+
+    if (!question) {
+        // Notificación de fallo: X
+        await conn.sendMessage(m.chat, { react: { text: 'X', key: m.key } })
+        return conn.reply(m.chat, `REQUERIMIENTO INCOMPLETO. La consulta no ha sido formulada.`, m, ctxErr)
+    }
+
+    try {
+        // Indicador de "Procesando"
+        await conn.sendMessage(m.chat, { react: { text: '💭', key: m.key } })
+        await conn.sendPresenceUpdate('composing', m.chat)
+
+        const response = await fetch(`https://api-adonix.ultraplus.click/ai/chat?apikey=${global.apikey}&q=${encodeURIComponent(question)}&model=${model}`)
+        const data = await response.json()
+
+        if (!data.status || !data.reply) throw new Error('El nodo de procesamiento no devolvió una respuesta válida.')
+
+        // Respuesta del sistema
+        await conn.reply(m.chat, `*EJECUCIÓN DEL MODELO ${model.toUpperCase()} COMPLETADA*\n\n${data.reply}`, m, ctxOk)
+        
+        // Indicador de éxito: ✅
+        await conn.sendMessage(m.chat, { react: { text: '✅', key: m.key } })
+
+    } catch (err) {
+        // Notificación de error: X
+        await conn.sendMessage(m.chat, { react: { text: 'X', key: m.key } })
+        conn.reply(m.chat, `ERROR CRÍTICO: Fallo en el enlace con el sistema externo.
+*Detalles del Fallo:* ${err.message}`, m, ctxErr)
+    }
+}
+
+handler.help = ["ia", "ai"]
+handler.tags = ["ai"]
+handler.command = ["ia", "ai", "itsuki"]
+
+export default handler
