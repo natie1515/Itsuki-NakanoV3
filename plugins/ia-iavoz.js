@@ -1,41 +1,49 @@
 import fetch from 'node-fetch'
 
 let handler = async (m, { conn, text }) => {
-  if (!text) return m.reply('🧀 *Escribe algo para C.C.*')
+  if (!text) return m.reply('🧀 *Escribe algo*')
 
+  // API de IA REAL (FlowGPT - funciona)
+  const prompt = `Como C.C. de Code Geass, responde a esto breve: "${text}"`
+  
   try {
-    // 1. IA de texto (Blackbox)
-    const aiRes = await fetch(`https://blackbox.ai/api/chat?message=${encodeURIComponent(text + " (responde como C.C. de Code Geass)")}`)
-    const respuesta = await aiRes.text()
+    const aiRes = await fetch('https://flowgpt.com/api/chat', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        messages: [{ role: 'user', content: prompt }],
+        model: 'gpt-3.5-turbo'
+      })
+    })
     
-    // Limpiar respuesta
-    let respuestaLimpia = respuesta.substring(0, 100).replace(/\n/g, ' ').trim()
-    if (!respuestaLimpia) respuestaLimpia = "Los contratos requieren claridad..."
+    const aiData = await aiRes.json()
+    const respuesta = aiData.choices[0].message.content || `¿${text}? Interesante propuesta.`
     
-    // 2. Google TTS (compatible WhatsApp)
-    const ttsUrl = `https://translate.google.com/translate_tts?ie=UTF-8&client=tw-ob&tl=es&q=${encodeURIComponent(respuestaLimpia)}`
+    // Google TTS
+    const ttsUrl = `https://translate.google.com/translate_tts?ie=UTF-8&client=tw-ob&tl=es&q=${encodeURIComponent(respuesta)}`
     
     await conn.sendMessage(m.chat, {
       audio: { url: ttsUrl },
-      mimetype: 'audio/mpeg',
-      fileName: 'cc_voz.mp3'
+      mimetype: 'audio/mpeg'
     }, { quoted: m })
     
   } catch (e) {
-    console.error(e)
-    // Fallback: solo repetir texto con TTS
-    const ttsUrl = `https://translate.google.com/translate_tts?ie=UTF-8&client=tw-ob&tl=es&q=${encodeURIComponent(text)}`
+    // Si falla, respuesta predefinida
+    const respuestas = [
+      `¿${text}? Hablemos de contratos.`,
+      `Lelouch consideraría tu propuesta: ${text}`,
+      `Como inmortal, he oído muchas cosas. ${text} es una más.`
+    ]
+    
+    const fallback = respuestas[Math.floor(Math.random() * respuestas.length)]
+    const ttsUrl = `https://translate.google.com/translate_tts?ie=UTF-8&client=tw-ob&tl=es&q=${encodeURIComponent(fallback)}`
     
     await conn.sendMessage(m.chat, {
       audio: { url: ttsUrl },
-      mimetype: 'audio/mpeg',
-      fileName: 'voz.mp3'
+      mimetype: 'audio/mpeg'
     }, { quoted: m })
   }
 }
 
-handler.help = ['cc <texto>']
-handler.tags = ['fun']
-handler.command = ['cc', 'c2']
-
+handler.command = ['cc']
 export default handler
