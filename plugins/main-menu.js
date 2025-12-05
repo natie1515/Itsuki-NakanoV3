@@ -17,16 +17,16 @@ let handler = async (m, { conn, usedPrefix: _p }) => {
     let neww = performance.now()
     let speed = (neww - old).toFixed(4)
 
-    let menuText = `> 👋🏻 .ৎ˚₊‧  *Hola*, ${m.sender.split('@')[0]} *Pasa Feliz Navidad ❄️*.
+    let menuText = `> 👋🏻 .ৎ˚₊‧  *Hola*, ${m.sender.split('@')[0]}.
 
  ִ \`I N F O - B O T\` ! ୧ ֹ 
    
-> ੭੭﹙❐﹚ \`bot :\` *ItsukiV3*
+> ੭੭﹙❐﹚ \`Bot :\` *ItsukiV3*
 > ੭੭﹙❐﹚ \`Ping :\` *${speed} ms*
 > ੭੭﹙❐﹚ \`Uptime :\` *${await getUptime()}*
 > ੭੭﹙❐﹚ \`RAM :\` *${(process.memoryUsage().rss / 1024 / 1024).toFixed(2)}* MB
 > ੭੭﹙❐﹚ \`Plugins :\` *${help.length}*
-> ੭੭﹙❐﹚ \`Owner :\` *@leoDev*
+> ੭੭﹙❐﹚ \`Owner :\` *@Jared*
 > ੭੭﹙❐﹚ \`Mode :\` *${global.opts['self'] ? 'Private' : 'Public'}*
 
 `
@@ -59,7 +59,7 @@ let handler = async (m, { conn, usedPrefix: _p }) => {
       }
     }
 
-    menuText += `> *‐ ダ mᥲძᥱ ᑲᥡ ʟᴇᴏ*`
+    menuText += `> *‐ ᴅᴇsᴀʀʀᴏʟʟᴀᴅᴏ ᴘᴏʀ ᴊᴀʀᴇᴅ*`
 
     await conn.sendMessage(m.chat, { react: { text: '❄️', key: m.key } })
 
@@ -69,14 +69,14 @@ let handler = async (m, { conn, usedPrefix: _p }) => {
       {
         name: 'cta_url',
         buttonParamsJson: JSON.stringify({ 
-          display_text: '☃️ ᴄᴀɴᴀʟ ᴏғɪᴄɪᴀʟ', 
+          display_text: '☃️ Canal Oficial', 
           url: 'https://whatsapp.com/channel/0029VbBvZH5LNSa4ovSSbQ2N' 
         })
       },
       {
         name: 'cta_url',
         buttonParamsJson: JSON.stringify({ 
-          display_text: '💻 ʜᴏsᴛɪɴɢ-ᴏғɪᴄɪᴀʟ', 
+          display_text: '💻 Hosting Oficial', 
           url: 'https://dash.quintillisas.com' 
         })
       }
@@ -113,7 +113,7 @@ let handler = async (m, { conn, usedPrefix: _p }) => {
   } catch (e) {
     console.error('❌ Error en el menú:', e)
     await conn.sendMessage(m.chat, {
-      text: `🍙 *ITSUNI MENÚ BÁSICO*\n\n• ${_p}menu - Menú principal\n• ${_p}ping - Estado del bot\n• ${_p}prefijos - Ver prefijos\n\n⚠️ *Error:* ${e.message}`
+      text: `🍙 *MENÚ BÁSICO*\n\n• ${_p}menu\n• ${_p}ping\n• ${_p}prefijos\n\n⚠️ *Error:* ${e.message}`
     }, { quoted: m })
   }
 }
