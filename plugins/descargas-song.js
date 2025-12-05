@@ -44,8 +44,32 @@ async function downloadSong(songUrl, outputPath) {
 
 let handler = async (m, { conn, args, usedPrefix }) => {
   const query = args.join(" ");
-  if (!query) return conn.reply(m.chat, `Uso: ${usedPrefix}song <nombre de la canción>`, m)
+  if (!query) {
+    return conn.reply(m.chat,
+`┏━━━━━━━━━━━━━━━━━━━━━┓
+┃  ⓘ INSTRUCCIONES ┃
+┗━━━━━━━━━━━━━━━━━━━━━┛
+
+> Uso: ${usedPrefix}song <nombre o enlace>
+
+> Ejemplos:
+> • ${usedPrefix}song bad bunny monaco
+> • ${usedPrefix}song https://open.spotify.com/track/...
+
+> El bot buscará la canción en Spotify.`, m)
+  }
+  
   try {
+    await m.react('🕒')
+    
+    conn.reply(m.chat,
+`┏━━━━━━━━━━━━━━━━━━━━━┓
+┃  ⓘ BUSCANDO ┃
+┗━━━━━━━━━━━━━━━━━━━━━┛
+
+> Buscando: "${query.substring(0, 50)}..."
+> Plataforma: Spotify`, m)
+
     const song = await searchSong(query);
 
     const tmpDir = path.join(".", "tmp");
@@ -53,22 +77,55 @@ let handler = async (m, { conn, args, usedPrefix }) => {
 
     const outputPath = path.join(tmpDir, `${song.title}.mp3`);
 
+    await conn.reply(m.chat,
+`┏━━━━━━━━━━━━━━━━━━━━━┓
+┃  ⓘ DESCARGANDO ┃
+┗━━━━━━━━━━━━━━━━━━━━━┛
+
+> Canción: ${song.title}
+> Artista: ${song.artists || 'Desconocido'}
+> Duración: ${song.duration || 'N/A'}`, m)
+
     await downloadSong(song.url, outputPath);
 
     const audioBuffer = fs.readFileSync(outputPath);
 
+    await conn.reply(m.chat,
+`┏━━━━━━━━━━━━━━━━━━━━━┓
+┃  ⓘ ENVIANDO ┃
+┗━━━━━━━━━━━━━━━━━━━━━┛
+
+> Transmitiendo audio...
+> Tamaño: ${(audioBuffer.length / (1024 * 1024)).toFixed(2)} MB`, m)
+
     const quotedContact = await makeFkontak()
     await conn.sendMessage(m.chat, {
       audio: audioBuffer,
-      mimetype: "audio/mpeg"
+      mimetype: "audio/mpeg",
+      fileName: `${song.title}.mp3`
     }, { quoted: quotedContact || m });
+    
+    await m.react('✅')
+    
+    // Limpiar archivo temporal
+    try {
+      fs.unlinkSync(outputPath)
+    } catch {}
+    
   } catch (err) {
-    await conn.reply(m.chat, `❌ Error: ${err.message}`, m);
+    await m.react('❌')
+    await conn.reply(m.chat,
+`┏━━━━━━━━━━━━━━━━━━━━━┓
+┃  ⓘ ERROR ┃
+┗━━━━━━━━━━━━━━━━━━━━━┛
+
+> Error: ${err.message}
+> Verifica el nombre o enlace e intenta nuevamente.`, m)
   }
 };
 
-
-// handler.tags = ["downloader"];
-handler.command = ["song"];
+handler.help = ['song <nombre/enlace>']
+handler.tags = ['downloader']
+handler.command = ["song", "spotify"];
 
 export default handler;
