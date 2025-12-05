@@ -1,21 +1,47 @@
 import axios from 'axios'
-import baileys from '@whiskeysockets/baileys'
 import cheerio from 'cheerio'
 
 let handler = async (m, { conn, text, args, usedPrefix }) => {
-    if (!text) return await conn.reply(m.chat, '> `❌ BUSQUEDA INCOMPLETA`\n\n> `📝 Por favor, ingresa lo que deseas buscar por Pinterest.`', m)
+    if (!text) {
+        return conn.reply(m.chat,
+`┏━━━━━━━━━━━━━━━━━━━━━┓
+┃  ⓘ INSTRUCCIONES ┃
+┗━━━━━━━━━━━━━━━━━━━━━┛
+
+> Uso: ${usedPrefix}pinterest <término>
+
+> Ejemplo: ${usedPrefix}pinterest paisajes
+> Ejemplo: ${usedPrefix}pinterest https://pinterest.com/pin/...
+
+> Envía una imagen aleatoria de Pinterest.`, m)
+    }
 
     try {
         await m.react('🕒')
 
         if (text.includes("https://")) {
             let i = await dl(args[0])
+            if (i.msg) throw new Error(i.msg)
+            
             let isVideo = i.download.includes(".mp4")
-            await conn.sendMessage(m.chat, { [isVideo ? "video" : "image"]: { url: i.download }, caption: i.title }, { quoted: fkontak })
+            await conn.sendMessage(m.chat, { 
+                [isVideo ? "video" : "image"]: { url: i.download }, 
+                caption: `┏━━━━━━━━━━━━━━━━━━━━━┓
+┃  ⓘ PINTEREST ┃
+┗━━━━━━━━━━━━━━━━━━━━━┛
+
+> ${i.title || 'Sin título'}` 
+            }, { quoted: m })
+            
         } else {
             const results = await pins(text)
             if (!results.length) {
-                return await conn.reply(m.chat, '> `❌ SIN RESULTADOS`\n\n> `📝 No se encontraron resultados para "${text}".`', m)
+                return conn.reply(m.chat,
+`┏━━━━━━━━━━━━━━━━━━━━━┓
+┃  ⓘ SIN RESULTADOS ┃
+┗━━━━━━━━━━━━━━━━━━━━━┛
+
+> No se encontraron resultados para "${text}".`, m)
             }
 
             const randomIndex = Math.floor(Math.random() * results.length)
@@ -25,26 +51,33 @@ let handler = async (m, { conn, text, args, usedPrefix }) => {
 
             await conn.sendMessage(m.chat, { 
                 image: { url: selectedImage.image_large_url }, 
-                caption: '> `PINTEREST`\n\n' +
-                        '> `Tema:` *' + text + '*\n' +
-                        '> `Título:` ' + (pinInfo.title || 'Sin título') + '\n' +
-                        '> `Autor:` ' + (pinInfo.user || 'Información no disponible') + '\n' +
-                        '> `Tablero:` ' + (pinInfo.board || 'Tablero no disponible') + '\n' +
-                        '> `Enlace:` _' + (pinInfo.link || '#') + '_\n\n' +
-                        '> `Resultados de tu búsqueda`'
+                caption: `┏━━━━━━━━━━━━━━━━━━━━━┓
+┃  ⓘ PINTEREST ┃
+┗━━━━━━━━━━━━━━━━━━━━━┛
+
+> Búsqueda: ${text}
+> Título: ${pinInfo.title}
+> Autor: ${pinInfo.user}
+> Tablero: ${pinInfo.board}` 
             }, { quoted: m })
 
-            await m.react('✅️')
+            await m.react('✅')
         }
     } catch (e) {
-        await m.react('✖️')
-        await conn.reply(m.chat, '> `⚠️ ERROR ENCONTRADO`\n\n> `📝 Usa *' + usedPrefix + 'report* para informarlo.`\n\n' + e, m)
+        await m.react('❌')
+        await conn.reply(m.chat,
+`┏━━━━━━━━━━━━━━━━━━━━━┓
+┃  ⓘ ERROR ┃
+┗━━━━━━━━━━━━━━━━━━━━━┛
+
+> Error: ${e.message}
+> Intenta con otro término o enlace.`, m)
     }
 }
 
-handler.help = ['pinterest']
-handler.command = ['pinterest', 'pin']
+handler.help = ['pinterest <término/enlace>']
 handler.tags = ["descargas"]
+handler.command = ['pinterest', 'pin']
 handler.group = true
 
 export default handler
@@ -53,24 +86,24 @@ async function getPinInfo(imageData) {
     try {
         if (imageData.pinner) {
             return {
-                user: `*${imageData.pinner.full_name || imageData.pinner.username}* (${imageData.pinner.username || 'N/A'})`,
-                title: `*${imageData.title || imageData.grid_title || 'Sin título'}*`,
-                board: `*${imageData.board?.name || 'Tablero no disponible'}*`,
+                user: `${imageData.pinner.full_name || imageData.pinner.username} (${imageData.pinner.username || 'N/A'})`,
+                title: `${imageData.title || imageData.grid_title || 'Sin título'}`,
+                board: `${imageData.board?.name || 'Tablero no disponible'}`,
                 link: imageData.url || `https://pinterest.com/pin/${imageData.id}/`
             }
         }
 
         return {
-            user: '*Información no disponible*',
-            title: '*Sin título*',
-            board: '*Tablero no disponible*',
+            user: 'Información no disponible',
+            title: 'Sin título',
+            board: 'Tablero no disponible',
             link: '#'
         }
     } catch (error) {
         return {
-            user: '*Información no disponible*',
-            title: '*Sin título*',
-            board: '*Tablero no disponible*',
+            user: 'Información no disponible',
+            title: 'Sin título',
+            board: 'Tablero no disponible',
             link: '#'
         }
     }
@@ -106,23 +139,7 @@ const pins = async (judul) => {
     const headers = {
         'accept': 'application/json, text/javascript, */*; q=0.01',
         'accept-language': 'id-ID,id;q=0.9,en-US;q=0.8,en;q=0.7',
-        'priority': 'u=1, i',
-        'referer': 'https://id.pinterest.com/',
-        'screen-dpr': '1',
-        'sec-ch-ua': '"Not(A:Brand";v="99", "Google Chrome";v="133", "Chromium";v="133")',
-        'sec-ch-ua-full-version-list': '"Not(A:Brand";v="99.0.0.0", "Google Chrome";v="133.0.6943.142", "Chromium";v="133.0.6943.142")',
-        'sec-ch-ua-mobile': '?0',
-        'sec-ch-ua-model': '""',
-        'sec-ch-ua-platform': '"Windows"',
-        'sec-ch-ua-platform-version': '"10.0.0"',
-        'sec-fetch-dest': 'empty',
-        'sec-fetch-mode': 'cors',
-        'sec-fetch-site': 'same-origin',
         'user-agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/133.0.0.0 Safari/537.36',
-        'x-app-version': 'c056fb7',
-        'x-pinterest-appstate': 'active',
-        'x-pinterest-pws-handler': 'www/index.js',
-        'x-pinterest-source-url': '/',
         'x-requested-with': 'XMLHttpRequest'
     }
 
@@ -133,8 +150,6 @@ const pins = async (judul) => {
                 if (item.images) {
                     return {
                         image_large_url: item.images.orig?.url || null,
-                        image_medium_url: item.images['564x']?.url || null,
-                        image_small_url: item.images['236x']?.url || null,
                         pinner: item.pinner,
                         title: item.title,
                         board: item.board,
