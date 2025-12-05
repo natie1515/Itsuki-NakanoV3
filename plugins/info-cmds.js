@@ -29,9 +29,9 @@ let handler = async (m, { conn, usedPrefix }) => {
 ┃  ⓘ REGISTRO DE COMANDOS ┃
 ┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛
 
-Comandos disponibles: ${totalCommands}
+> Comandos disponibles: ${totalCommands}
 
-Usa ${usedPrefix}menu para acceder al registro completo.
+> Usa ${usedPrefix}menu para acceder al registro completo.
 
 "Ara te amo :3."
 `.trim()
@@ -45,9 +45,9 @@ Usa ${usedPrefix}menu para acceder al registro completo.
 ┃  ⓘ REGISTRO ┃
 ┗━━━━━━━━━━━━━━━━━━━━━┛
 
-Órdenes disponibles: Múltiples
+> Órdenes disponibles: Múltiples
 
-Usa ${usedPrefix}menu para ver todas las órdenes.
+> Usa ${usedPrefix}menu para ver todas las órdenes.
 
 "Cristian me come toda la verga."`, 
       m, ctxOk
