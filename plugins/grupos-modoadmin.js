@@ -1,13 +1,22 @@
 let handler = async (m, { conn, usedPrefix, command, isAdmin, isROwner }) => {
     if (!m.isGroup) {
         await m.react('❌')
-        return m.reply('> ⓘ Este comando solo funciona en grupos.')
+        return conn.reply(m.chat, 
+`┏━━━━━━━━━━━━━━━━━━━━━┓
+┃  ⓘ RESTRICCIÓN ┃
+┗━━━━━━━━━━━━━━━━━━━━━┛
+
+> Este comando solo funciona en grupos.`, m)
     }
 
-    // Solo admins o el creador pueden usar este comando
     if (!isAdmin && !isROwner) {
         await m.react('🚫')
-        return m.reply('> ⓘ Solo los administradores pueden usar este comando.')
+        return conn.reply(m.chat,
+`┏━━━━━━━━━━━━━━━━━━━━━┓
+┃  ⓘ ACCESO DENEGADO ┃
+┗━━━━━━━━━━━━━━━━━━━━━┛
+
+> Solo administradores pueden usar este comando.`, m)
     }
 
     let chat = global.db.data.chats[m.chat]
@@ -15,56 +24,57 @@ let handler = async (m, { conn, usedPrefix, command, isAdmin, isROwner }) => {
     let action = args[0]?.toLowerCase()
 
     if (!action || (action !== 'on' && action !== 'off')) {
-        let status = chat.adminmode ? '🟢 ACTIVADO' : '🔴 DESACTIVADO'
+        let status = chat.adminmode ? '⚜️ ACTIVADO' : '✖️ DESACTIVADO'
         await m.react('ℹ️')
-        return m.reply(`╭─「 🛡️ *MODO ADMIN* 🛡️ 」
-│ 
-│ 📊 Estado actual: ${status}
-│ 
-│ 💡 *Uso del comando:*
-│ ├ ${usedPrefix}admin on
-│ └ ${usedPrefix}admin off
-│ 
-│ 📝 *Descripción:*
-│ Cuando está ACTIVADO, el bot solo
-│ responderá a mensajes de administradores
-│ en este grupo.
-╰─◉`.trim())
+        return conn.reply(m.chat,
+`┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
+┃  ⓘ PROTOCOLO ADMIN ┃
+┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛
+
+> Estado: ${status}
+
+> Uso: ${usedPrefix}admin [on/off]`, m)
     }
 
     if (action === 'on') {
         if (chat.adminmode) {
             await m.react('ℹ️')
-            return m.reply('> ⓘ El modo *Admin* ya está activado en este grupo.')
+            return conn.reply(m.chat,
+`┏━━━━━━━━━━━━━━━━━━━━━┓
+┃  ⓘ INFORMACIÓN ┃
+┗━━━━━━━━━━━━━━━━━━━━━┛
+
+> El modo Admin ya está activado.`, m)
         }
         chat.adminmode = true
         await m.react('✅')
-        m.reply(`╭─「 🛡️ *MODO ADMIN ACTIVADO* 🛡️ 」
-│ 
-│ ✅ *Configuración aplicada:*
-│ ├ El bot ahora solo responderá
-│ └ a los administradores del grupo.
-│ 
-│ 🔒 *Modo exclusivo activado*
-│ 📍 Grupo: ${m.chat}
-╰─◉`.trim())
+        conn.reply(m.chat,
+`┏━━━━━━━━━━━━━━━━━━━━━┓
+┃  ⓘ ACTIVADO ┃
+┗━━━━━━━━━━━━━━━━━━━━━┛
+
+> Modo Admin activado.
+> Solo administradores podrán usar comandos.`, m)
 
     } else if (action === 'off') {
         if (!chat.adminmode) {
             await m.react('ℹ️')
-            return m.reply('> ⓘ El modo *Admin* ya está desactivado en este grupo.')
+            return conn.reply(m.chat,
+`┏━━━━━━━━━━━━━━━━━━━━━┓
+┃  ⓘ INFORMACIÓN ┃
+┗━━━━━━━━━━━━━━━━━━━━━┛
+
+> El modo Admin ya está desactivado.`, m)
         }
         chat.adminmode = false
         await m.react('✅')
-        m.reply(`╭─「 🛡️ *MODO ADMIN DESACTIVADO* 🛡️ 」
-│ 
-│ ✅ *Configuración aplicada:*
-│ ├ El bot ahora responderá
-│ └ a todos los usuarios.
-│ 
-│ 🔓 *Modo exclusivo desactivado*
-│ 📍 Grupo: ${m.chat}
-╰─◉`.trim())
+        conn.reply(m.chat,
+`┏━━━━━━━━━━━━━━━━━━━━━┓
+┃  ⓘ DESACTIVADO ┃
+┗━━━━━━━━━━━━━━━━━━━━━┛
+
+> Modo Admin desactivado.
+> Todos pueden usar comandos.`, m)
     }
 }
 
