@@ -1,9 +1,20 @@
+import { toAudio } from '../lib/converter.js'
+
 let handler = async (m, { conn, text }) => {
-  const audio = await conn.sendAudio(m.chat, 
-    `https://translate.google.com/translate_tts?tl=es&q=${encodeURIComponent(text)}`,
-    m, 
-    'voz.mp3'
-  )
+  // Texto directo
+  const respuesta = `Soy C.C. ${text}`
+  
+  // 1. Primero envía el texto
+  await m.reply(respuesta)
+  
+  // 2. Si hay función toAudio, envía audio
+  if (toAudio) {
+    const audio = await toAudio(respuesta, 'mp3')
+    await conn.sendMessage(m.chat, {
+      audio: audio,
+      mimetype: 'audio/mpeg'
+    }, { quoted: m })
+  }
 }
 
 handler.command = ['cc']
