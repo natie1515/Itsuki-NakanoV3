@@ -4,7 +4,7 @@ let handler = async (m, { conn }) => {
   try {
     await conn.sendMessage(m.chat, { react: { text: '👑', key: m.key } })
 
-    const menuText = `> *@Hola Soy Leo Creador De Itsuki Nakano La Bot Que Estas Usando*\n\n> sᴇʟᴇᴄɪᴏɴᴀ ᴜɴ ᴍᴇᴛᴏᴅᴏ ᴘᴀʀᴀ ᴄᴏᴍᴜɴɪᴄᴀʀᴛᴇ ᴄᴏɴᴍɪɢᴏ 🧃:`
+    const menuText = `> *@Hola, soy Jared, Owner de Itsuki Nakano V3*\n\n> ᴇʟɪɢᴇ ᴄóᴍᴏ ǫᴜɪᴇʀᴇs ᴄᴏɴᴛᴀᴄᴛᴀʀᴍᴇ 🧃:`
 
     const imageUrl = 'https://cdn.russellxz.click/892b3d23.jpg'
 
@@ -12,34 +12,32 @@ let handler = async (m, { conn }) => {
       {
         name: 'cta_url',
         buttonParamsJson: JSON.stringify({ 
-          display_text: '𝙄𝙣𝙨𝙩𝙖𝙜𝙧𝙖𝙢 📸', 
+          display_text: 'Instagram 📸', 
           url: 'https://www.instagram.com/naayz01s' 
         })
       },
       {
         name: 'cta_url',
         buttonParamsJson: JSON.stringify({ 
-          display_text: '𝙊𝙬𝙣𝙚𝙧 👑', 
-          url: 'https://wa.me/573187418668' 
+          display_text: 'Owner 👑', 
+          url: 'https://wa.me/593994524688' 
         })
       },
       {
         name: 'cta_url',
         buttonParamsJson: JSON.stringify({ 
-          display_text: '𝘿𝙤𝙣𝙖𝙘𝙞𝙤𝙣𝙘𝙞𝙩𝙖 ❤️‍🩹', 
+          display_text: 'Donación ❤️‍🩹', 
           url: 'https://paypal.me/Erenxs01' 
         })
       }
     ]
 
-    // === Imagen desde URL ===
     const media = await prepareWAMessageMedia({ image: { url: imageUrl } }, { upload: conn.waUploadToServer })
     const header = proto.Message.InteractiveMessage.Header.fromObject({
       hasMediaAttachment: true,
       imageMessage: media.imageMessage
     })
 
-    // === Crear mensaje interactivo ===
     const interactiveMessage = proto.Message.InteractiveMessage.fromObject({
       body: proto.Message.InteractiveMessage.Body.fromObject({ text: menuText }),
       header,
@@ -48,13 +46,16 @@ let handler = async (m, { conn }) => {
       })
     })
 
-    const msg = generateWAMessageFromContent(m.chat, { interactiveMessage }, { userJid: conn.user.jid, quoted: m })
+    const msg = generateWAMessageFromContent(m.chat, { interactiveMessage }, { 
+      userJid: conn.user.jid, 
+      quoted: m 
+    })
     await conn.relayMessage(m.chat, msg.message, { messageId: msg.key.id })
 
   } catch (e) {
     console.error('❌ Error en el comando owner:', e)
     await conn.sendMessage(m.chat, {
-      text: `❌ *Error al cargar la información del creador*\n\n🔗 Contacta directamente: https://wa.me/573187418668\n\n⚠️ *Error:* ${e.message}`
+      text: `❌ *Error al cargar la información del owner*\n\n🔗 Contacto directo: https://wa.me/593994524688\n\n⚠️ *Error:* ${e.message}`
     }, { quoted: m })
   }
 }
