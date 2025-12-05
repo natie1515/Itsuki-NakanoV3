@@ -33,9 +33,7 @@ let handler = async (m, { conn, usedPrefix, args, command }) => {
 
     await conn.sendMessage(m.chat, { react: { text: '🔍', key: m.key } })
 
-    // API principal
     const api1 = `https://mayapi.ooguy.com/instagram?url=${encodeURIComponent(url)}&apikey=may-f53d1d49`
-    // API secundaria
     const api2 = `https://apiadonix.kozow.com/download/instagram?apikey=${global.apikey}&url=${encodeURIComponent(url)}`
 
     let mediaUrl, mediaTitle, mediaType
@@ -91,7 +89,8 @@ let handler = async (m, { conn, usedPrefix, args, command }) => {
 
 > Título: ${mediaTitle}
 > Formato: MP4
-> Fuente: Instagram`, m)
+> Fuente: Instagram`
+      }, { quoted: m })
     } else {
       await conn.sendMessage(m.chat, {
         image: { url: mediaUrl },
@@ -101,7 +100,8 @@ let handler = async (m, { conn, usedPrefix, args, command }) => {
 
 > Título: ${mediaTitle}
 > Formato: JPEG
-> Fuente: Instagram`, m)
+> Fuente: Instagram`
+      }, { quoted: m })
     }
 
     await conn.sendMessage(m.chat, { react: { text: '✅', key: m.key } })
@@ -119,7 +119,7 @@ let handler = async (m, { conn, usedPrefix, args, command }) => {
   }
 }
 
-handler.help = ['ig <enlace>', 'igaudio <enlace>']
+handler.help = ['ig', 'igaudio']
 handler.tags = ['downloader']
 handler.command = ['ig', 'igaudio']
 handler.register = false
