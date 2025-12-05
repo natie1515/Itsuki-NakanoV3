@@ -7,13 +7,14 @@ const __filename = fileURLToPath(import.meta.url)
 const __dirname = path.dirname(__filename)
 const ROOT = path.resolve(__dirname, '..')
 
+// Miniatura de contacto de Lelouch
 async function makeFkontak() {
   try {
-    const res = await fetch('https://raw.githubusercontent.com/WillZek/Storage-CB2/main/images/d110942e81b3.jpg')
+    const res = await fetch('https://i.postimg.cc/mk8FDzNc/descarga.jpg') // Imagen de Lelouch
     const thumb2 = Buffer.from(await res.arrayBuffer())
     return {
       key: { participants: '0@s.whatsapp.net', remoteJid: 'status@broadcast', fromMe: false, id: 'Halo' },
-      message: { locationMessage: { name: '⚙️ 𝐒𝐢𝐬𝐭𝐞𝐦𝐚 𝐀𝐜𝐭𝐮𝐚𝐥𝐢𝐳𝐚𝐝𝐨 ✅', jpegThumbnail: thumb2 } },
+      message: { locationMessage: { name: '⚜️ Sistema Lelouch ✅', jpegThumbnail: thumb2 } },
       participant: '0@s.whatsapp.net'
     }
   } catch {
@@ -25,31 +26,33 @@ let handler = async (m, { conn, args }) => {
   try {
     await m.react('🔄')
 
-    const cmd = 'git --no-pager pull --rebase --autostash' + (args?.length ? ' ' + args.join(' ') : '')
-    const output = execSync(cmd, { cwd: ROOT, encoding: 'utf8' })
+    const gitArgs = ['--no-pager', 'pull', '--rebase', '--autostash', ...(args || [])]
+    const output = execSync(`git ${gitArgs.join(' ')}`, { cwd: ROOT, encoding: 'utf8' })
 
     const lower = output.toLowerCase()
     const isUpToDate = lower.includes('already up to date') || lower.includes('up to date')
     let response
+
     if (isUpToDate) {
-      response = `> ⓘ *¡Itsuki ya está actualizada!*\n\n> ⓘ *El bot está al día con las últimas mejoras*`
+      response = `> ⚜️ *¡Lelouch ya está actualizado!*\n\n> ⚜️ *El bot está al día con las últimas mejoras*`
       await m.react('✅')
     } else {
       const changed = []
       const lines = output.split(/\r?\n/)
       for (const ln of lines) {
-        const m = ln.match(/^\s*([A-Za-z0-9_\-./]+)\s*\|\s*\d+/)
-        if (m && m[1] && !changed.includes(m[1])) changed.push(m[1])
+        const match = ln.match(/^\s*([A-Za-z0-9_\-./]+)\s*\|\s*\d+/)
+        if (match && match[1] && !changed.includes(match[1])) changed.push(match[1])
       }
+
       const banner = [
-        '> ⓘ *¡ACTUALIZACIÓN EXITOSA!*',
+        '> ⚜️ *¡ACTUALIZACIÓN EXITOSA!*',
         '> ╰─────────────────',
         '',
-        '> ⓘ *Archivos actualizados:*',
+        '> ⚜️ *Archivos actualizados:*',
         ''
       ]
-      const list = changed.slice(0, 10).map(f => `> ⓘ ${f}`).join('\n') || '> ⓘ *Todos los archivos actualizados*'
-      response = `${banner.join('\n')}\n${list}\n\n> ⓘ *¡Itsuki está lista!*`
+      const list = changed.slice(0, 10).map(f => `> ⚜️ ${f}`).join('\n') || '> ⚜️ *Todos los archivos actualizados*'
+      response = `${banner.join('\n')}\n${list}\n\n> ⚜️ *¡Lelouch está listo!*`
       await m.react('✅')
     }
 
@@ -78,20 +81,20 @@ let handler = async (m, { conn, args }) => {
           ))
 
         if (conflictedFiles.length > 0) {
-          const conflictMsg = '> ⓘ *¡Ops! Conflictos detectados*\n\n' +
-            '> ⓘ *Archivos con conflictos:*\n\n' +
-            conflictedFiles.map(f => '> ⓘ ' + f.slice(3)).join('\n') +
-            '\n\n> ⓘ *Para solucionar:*\n' +
-            '> ⓘ • Haz backup de tus cambios\n' +
-            '> ⓘ • O actualiza manualmente'
+          const conflictMsg = '> ⚜️ *¡Ops! Conflictos detectados*\n\n' +
+            '> ⚜️ *Archivos con conflictos:*\n\n' +
+            conflictedFiles.map(f => '> ⚜️ ' + f.slice(3)).join('\n') +
+            '\n\n> ⚜️ *Para solucionar:*\n' +
+            '> ⚜️ • Haz backup de tus cambios\n' +
+            '> ⚜️ • O actualiza manualmente'
           return await conn.reply(m.chat, conflictMsg, m)
         }
       }
     } catch {}
 
     const msg = /not a git repository/i.test(error?.message || '')
-      ? '> ⓘ *¡Error!*\n\n> ⓘ Este directorio no es un repositorio Git.\n> ⓘ Inicializa con `git init` y agrega el remoto.'
-      : `> ⓘ *¡Error en la actualización!*\n\n> ⓘ ${error?.message || 'Error desconocido.'}`
+      ? '> ⚜️ *¡Error!*\n\n> ⚜️ Este directorio no es un repositorio Git.\n> ⚜️ Inicializa con `git init` y agrega el remoto.'
+      : `> ⚜️ *¡Error en la actualización!*\n\n> ⚜️ ${error?.message || 'Error desconocido.'}`
     await conn.reply(m.chat, msg, m)
   }
 }
