@@ -4,7 +4,7 @@ let handler = async (m, { conn }) => {
   try {
     await conn.sendMessage(m.chat, { react: { text: '👑', key: m.key } })
 
-    const menuText = `> *@Hola, soy Jared, Owner de Itsuki Nakano V3*\n\n> ᴇʟɪɢᴇ ᴄóᴍᴏ ǫᴜɪᴇʀᴇs ᴄᴏɴᴛᴀᴄᴛᴀʀᴍᴇ :`
+    const menuText = `> *@Hola, soy Jared, Owner de Lelouch Vi Britanna V3*\n\n> ᴇʟɪɢᴇ ᴄóᴍᴏ ǫᴜɪᴇʀᴇs ᴄᴏɴᴛᴀᴄᴛᴀʀᴍᴇ :`
 
     const imageUrl = 'https://cdn.russellxz.click/892b3d23.jpg'
 
