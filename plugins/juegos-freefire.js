@@ -41,7 +41,20 @@ function parseText(raw, givenUid) {
 let handler = async (m, { text, args, usedPrefix, command, conn }) => {
   const rawText = (text || args.join(' ') || '').trim()
   const uid = (rawText.match(/\b\d{5,}\b/) || [null])[0]
-  if (!uid) return m.reply(`🌸 Uso: ${usedPrefix + command} <uid>\n✨ Ejemplo: ${usedPrefix + command} 12183392680`)
+  
+  if (!uid) {
+    await conn.reply(m.chat, 
+`┏━━━━━━━━━━━━━━━━━━━━━┓
+┃  ⓘ INSTRUCCIONES ┃
+┗━━━━━━━━━━━━━━━━━━━━━┛
+
+*Protocolo de consulta de estratega*
+Formato: ${usedPrefix + command} <uid>
+Ejemplo: ${usedPrefix + command} 12183392680
+
+"Conocer al enemigo es el primer paso hacia la victoria."`, m)
+    return
+  }
 
   await m.react?.('⏳')
   let raw
@@ -50,7 +63,16 @@ let handler = async (m, { text, args, usedPrefix, command, conn }) => {
     if (!raw) throw new Error('Respuesta vacía')
   } catch (e) {
     await m.react?.('✖️')
-    return m.reply(`❌ No pude obtener datos para UID *${uid}*.\n> ${e.message || e}`)
+    await conn.reply(m.chat,
+`┏━━━━━━━━━━━━━━━━━━━━━┓
+┃  ⓘ CONEXIÓN FALLIDA ┃
+┗━━━━━━━━━━━━━━━━━━━━━┛
+
+*No pudo obtenerse información del estratega UID ${uid}*
+Causa: ${e.message || 'Error de conexión'}
+
+"Hasta el mejor espía puede fallar en obtener información."`, m)
+    return
   }
 
   const parsed = parseText(raw, uid)
@@ -58,70 +80,54 @@ let handler = async (m, { text, args, usedPrefix, command, conn }) => {
   const now = new Date()
   const fechaLocal = now.toLocaleString('es-ES', { hour12: false })
 
-  const emojiMap = [
-    { re: /guild|clan/i, e: '🏰' },
-    { re: /rank|rango/i, e: '🏅' },
-    { re: /like|me gusta/i, e: '👍' },
-    { re: /badge|insignia/i, e: '🎖' },
-    { re: /region|zona/i, e: '🌍' },
-    { re: /exp|exper/i, e: '⚡' },
-    { re: /level|nivel/i, e: '📈' },
-    { re: /name|nombre/i, e: '👤' },
-    { re: /uid/i, e: '🆔' },
-    { re: /kill|asesin/i, e: '🔫' },
-    { re: /head/i, e: '🎯' },
-    { re: /win|vict/i, e: '🏆' },
-    { re: /kd\b/i, e: '📊' }
-  ]
-
-  const getEmoji = (label) => {
-    for (const m of emojiMap) if (m.re.test(label)) return m.e
-    return '•'
-  }
-
   const coreLines = []
-  if (f.name) coreLines.push(`👤 Nombre: *${f.name}*`)
-  if (f.uid) coreLines.push(`🆔 UID: *${f.uid}*`)
+  if (f.name) coreLines.push(`Estratega: *${f.name}*`)
+  if (f.uid) coreLines.push(`Identificación: *${f.uid}*`)
   if (typeof f.level !== 'undefined' || f.levelRaw) {
     const lvlTxt = typeof f.level !== 'undefined' ? f.level : f.levelRaw
-    coreLines.push(`📈 Nivel: *${lvlTxt}*${f.exp ? `  ⚡ Exp: *${f.exp}*` : ''}`)
+    coreLines.push(`Rango de Batalla: *${lvlTxt}*${f.exp ? `   Experiencia: *${f.exp}*` : ''}`)
   }
-  if (f.region) coreLines.push(`🌍 Región: *${f.region}*`)
+  if (f.region) coreLines.push(`Territorio: *${f.region}*`)
 
   const skipKeys = new Set(['uid','name','level','levelraw','exp','region','bannerImage'])
   const extraLines = []
   for (const { label, value } of parsed.items) {
     const k = label.toLowerCase()
     if (skipKeys.has(k)) continue
-    extraLines.push(`${getEmoji(label)} ${label}: *${value}*`)
+    extraLines.push(`   ${label}: *${value}*`)
   }
 
   const caption = [
-`╭━━━〔 🌸 *ITSUKI NAKANO - FF UID* 🌸 〕━━━⬣`,
-`┃`,
-`┃ 👤 Usuario: ${f.name || 'Desconocido'}`,
-`┃ 🆔 UID: ${f.uid || uid}`,
-f.level ? `┃ 📈 Nivel: ${f.level} ${f.exp ? ` ⚡ Exp: ${f.exp}` : ''}` : '',
-f.region ? `┃ 🌍 Región: ${f.region}` : '',
-`┃`,
-extraLines.length ? `┃ ✦ Datos extra:` : '',
-...extraLines.map(l => `┃ ${l}`),
-`┃`,
-`╰━━━━━━━━━━━━━━⬣`,
-`⌚ Fecha: ${fechaLocal}`,
-`🔥 「 Itsuki Nakano-FF 」 🔥`
+`┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
+┃  ⓘ PERFIL DE ESTRATEGA ┃
+┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛`,
+`${coreLines.join('\n')}`,
+extraLines.length ? `\n*Registro de Batallas:*` : '',
+...extraLines,
+`\n⏰ Consulta realizada: ${fechaLocal}`,
+`\n"El valor de un guerrero se mide en su historial de batallas."`
   ].filter(Boolean).join('\n')
 
   try {
     if (f.bannerImage) {
-      await conn.sendMessage(m.chat, { image: { url: f.bannerImage }, caption }, { quoted: m })
+      await conn.sendMessage(m.chat, { 
+        image: { url: f.bannerImage }, 
+        caption 
+      }, { quoted: m })
     } else {
       await conn.reply(m.chat, caption, m)
     }
-    await m.react?.('✅')
+    await m.react?.('👑')
   } catch (e) {
-    await m.react?.('⚠️')
-    await conn.reply(m.chat, caption + `\n(Nota: no se pudo enviar imagen: ${e.message})`, m)
+    await m.react?.('✖️')
+    await conn.reply(m.chat, 
+`┏━━━━━━━━━━━━━━━━━━━━━┓
+┃  ⓘ TRANSMISIÓN FALLIDA ┃
+┗━━━━━━━━━━━━━━━━━━━━━┛
+
+*Información obtenida pero transmisión fallida*
+${caption}
+\nError: ${e.message}`, m)
   }
 }
 
