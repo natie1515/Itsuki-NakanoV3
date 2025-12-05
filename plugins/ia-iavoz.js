@@ -1,19 +1,9 @@
-import fetch from 'node-fetch'
-
 let handler = async (m, { conn, text }) => {
-  // Texto de C.C. directo (sin IA por ahora)
-  const frase = `Soy C.C. ${text} ¿Quieres hacer un contrato?`
-  
-  // URL segura para TTS
-  const url = `https://api.dubdub.ai/tts?text=${encodeURIComponent(frase)}&voice=espeaka`
-  
-  const res = await fetch(url)
-  const audio = await res.arrayBuffer()
-  
-  await conn.sendMessage(m.chat, {
-    audio: Buffer.from(audio),
-    mimetype: 'audio/mp4'
-  }, { quoted: m })
+  const audio = await conn.sendAudio(m.chat, 
+    `https://translate.google.com/translate_tts?tl=es&q=${encodeURIComponent(text)}`,
+    m, 
+    'voz.mp3'
+  )
 }
 
 handler.command = ['cc']
