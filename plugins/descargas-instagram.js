@@ -4,34 +4,38 @@ let handler = async (m, { conn, usedPrefix, args, command }) => {
   try {
     if (!args[0]) {
       return conn.reply(m.chat,
-        `> ⓘ USO INCORRECTO
+`┏━━━━━━━━━━━━━━━━━━━━━┓
+┃  ⓘ INSTRUCCIONES ┃
+┗━━━━━━━━━━━━━━━━━━━━━┛
 
-> ❌ Debes proporcionar un enlace de Instagram
+> Uso: ${usedPrefix}ig <enlace>
 
-> 📝 Ejemplos:
-> • ${usedPrefix + command} https://www.instagram.com/p/xxxxx
-> • ${usedPrefix}ig https://instagram.com/reel/xxxxx
+> Ejemplos:
+> • ${usedPrefix}ig https://instagram.com/p/...
+> • ${usedPrefix}ig https://instagram.com/reel/...
 
-> 💡 Comandos:
-> • ${usedPrefix}ig <url> - Descargar video/imagen
-> • ${usedPrefix}igaudio <url> - Extraer audio`, m)
+> Para audio: ${usedPrefix}igaudio <enlace>`, m)
     }
 
     const url = args[0]
     if (!url.match(/instagram\.com/)) {
       return conn.reply(m.chat,
-        `> ⓘ ENLACE INVALIDO
+`┏━━━━━━━━━━━━━━━━━━━━━┓
+┃  ⓘ ENLACE INVÁLIDO ┃
+┗━━━━━━━━━━━━━━━━━━━━━┛
 
-> ❌ URL no válida
+> El enlace debe ser de Instagram.
 
-> 💡 Ejemplo correcto:
-> https://www.instagram.com/p/xxxxx
-> https://instagram.com/reel/xxxxx`, m)
+> Ejemplos válidos:
+> • https://instagram.com/p/...
+> • https://instagram.com/reel/...`, m)
     }
 
     await conn.sendMessage(m.chat, { react: { text: '🔍', key: m.key } })
 
+    // API principal
     const api1 = `https://mayapi.ooguy.com/instagram?url=${encodeURIComponent(url)}&apikey=may-f53d1d49`
+    // API secundaria
     const api2 = `https://apiadonix.kozow.com/download/instagram?apikey=${global.apikey}&url=${encodeURIComponent(url)}`
 
     let mediaUrl, mediaTitle, mediaType
@@ -43,15 +47,15 @@ let handler = async (m, { conn, usedPrefix, args, command }) => {
 
       if (data.result?.url) {
         mediaUrl = data.result.url
-        mediaTitle = data.result.title || 'Contenido de Instagram'
+        mediaTitle = data.result.title || 'Instagram'
         mediaType = data.result.type || 'video'
       } else if (data.url) {
         mediaUrl = data.url
-        mediaTitle = data.title || 'Contenido de Instagram'
+        mediaTitle = data.title || 'Instagram'
         mediaType = data.type || 'video'
       } else if (data.data?.url) {
         mediaUrl = data.data.url
-        mediaTitle = data.data.title || 'Contenido de Instagram'
+        mediaTitle = data.data.title || 'Instagram'
         mediaType = data.data.type || 'video'
       }
     } catch {
@@ -61,11 +65,13 @@ let handler = async (m, { conn, usedPrefix, args, command }) => {
 
       const adonixData = Array.isArray(data2.data) ? data2.data[0] : data2.data
       mediaUrl = adonixData?.url
-      mediaTitle = 'Contenido de Instagram'
+      mediaTitle = 'Instagram'
       mediaType = mediaUrl?.includes('.mp4') ? 'video' : 'image'
     }
 
-    if (!mediaUrl) throw new Error('No se encontró contenido válido')
+    if (!mediaUrl) {
+      throw new Error('No se encontró contenido válido')
+    }
 
     const isVideo = mediaType === 'video' || mediaUrl.includes('.mp4')
     const isAudioCommand = command.toLowerCase().includes('audio')
@@ -74,43 +80,46 @@ let handler = async (m, { conn, usedPrefix, args, command }) => {
       await conn.sendMessage(m.chat, {
         audio: { url: mediaUrl },
         mimetype: 'audio/mpeg',
-        fileName: `audio_instagram.mp3`
+        fileName: `instagram_audio.mp3`
       }, { quoted: m })
     } else if (isVideo) {
       await conn.sendMessage(m.chat, {
         video: { url: mediaUrl },
-        caption: `> ⓘ VIDEO DESCARGADO
+        caption: `┏━━━━━━━━━━━━━━━━━━━━━┓
+┃  ⓘ INSTAGRAM VIDEO ┃
+┗━━━━━━━━━━━━━━━━━━━━━┛
 
-> 📹 ${mediaTitle}
-> 🎬 Formato: MP4
-> 🎁 Calidad: Original`
-      }, { quoted: m })
+> Título: ${mediaTitle}
+> Formato: MP4
+> Fuente: Instagram`, m)
     } else {
       await conn.sendMessage(m.chat, {
         image: { url: mediaUrl },
-        caption: `> ⓘ IMAGEN DESCARGADA
+        caption: `┏━━━━━━━━━━━━━━━━━━━━━┓
+┃  ⓘ INSTAGRAM IMAGEN ┃
+┗━━━━━━━━━━━━━━━━━━━━━┛
 
-> 🖼️ ${mediaTitle}
-> 🎨 Formato: JPEG
-> 🎁 Calidad: Original`
-      }, { quoted: m })
+> Título: ${mediaTitle}
+> Formato: JPEG
+> Fuente: Instagram`, m)
     }
 
     await conn.sendMessage(m.chat, { react: { text: '✅', key: m.key } })
 
   } catch (error) {
-    console.error('Error en descarga Instagram:', error)
+    console.error('Error Instagram:', error)
     await conn.reply(m.chat,
-      `> ⓘ ERROR
+`┏━━━━━━━━━━━━━━━━━━━━━┓
+┃  ⓘ ERROR ┃
+┗━━━━━━━━━━━━━━━━━━━━━┛
 
-> ❌ ${error.message}
-
-> 💡 Verifica el enlace o intenta más tarde`, m)
+> Error: ${error.message}
+> Verifica el enlace e intenta nuevamente.`, m)
     await conn.sendMessage(m.chat, { react: { text: '❌', key: m.key } })
   }
 }
 
-handler.help = ['ig', 'igaudio']
+handler.help = ['ig <enlace>', 'igaudio <enlace>']
 handler.tags = ['downloader']
 handler.command = ['ig', 'igaudio']
 handler.register = false
