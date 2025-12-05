@@ -1,11 +1,11 @@
-// Tourl Creado Por DavidXzsy Adaptado Para Itsuki Nakano IA v2
+// ⓘ Sistema de Almacenamiento Imperial - Adaptado para el Imperio de Britannia
 
 import fetch, { FormData, Blob } from 'node-fetch'
 import crypto from 'crypto'
 import { fileTypeFromBuffer } from 'file-type'
 import { prepareWAMessageMedia, generateWAMessageFromContent, getDevice } from '@whiskeysockets/baileys'
 
-// GitHub configuration - Use environment variables for security
+// ⓘ Configuración estratégica - El conocimiento es poder
 const GITHUB_HARDCODED_TOKEN = process.env.GITHUB_TOKEN || ''
 const GITHUB_HARDCODED_REPO = process.env.GITHUB_REPO || 'WillZek/Storage-CB2'
 
@@ -15,7 +15,7 @@ async function makeFkontak() {
     const thumb2 = Buffer.from(await res.arrayBuffer())
     return {
       key: { participants: '0@s.whatsapp.net', remoteJid: 'status@broadcast', fromMe: false, id: 'Halo' },
-      message: { locationMessage: { name: 'Tourl', jpegThumbnail: thumb2 } },
+      message: { locationMessage: { name: 'Sistema de Archivos Imperial', jpegThumbnail: thumb2 } },
       participant: '0@s.whatsapp.net'
     }
   } catch {
@@ -30,10 +30,11 @@ function formatBytes(bytes) {
   return `${(bytes / (1024 ** i)).toFixed(2)} ${sizes[i]}`
 }
 
+// ⓘ Protocolos de subida - Cada uno con su propósito estratégico
 async function uploadGitHub(filename, base64Content) {
   const token = process.env.GITHUB_TOKEN || global.GITHUB_TOKEN || GITHUB_HARDCODED_TOKEN
   const repo = process.env.GITHUB_REPO || global.GITHUB_REPO || GITHUB_HARDCODED_REPO
-  if (!token) throw new Error('Falta GITHUB_TOKEN')
+  if (!token) throw new Error('ⓘ `Token de GitHub no configurado. La seguridad requiere credenciales.`')
   const path = `images/${filename}`
   const res = await fetch(`https://api.github.com/repos/${repo}/contents/${path}`, {
     method: 'PUT',
@@ -42,7 +43,7 @@ async function uploadGitHub(filename, base64Content) {
   })
   const data = await res.json()
   if (data?.content?.download_url) return data.content.download_url
-  throw new Error(data?.message || 'Fallo al subir a GitHub')
+  throw new Error(data?.message || 'ⓘ `Fallo en la operación de subida a GitHub. Recalcular estrategia.`')
 }
 
 async function uploadCatbox(buffer, ext, mime) {
@@ -105,18 +106,19 @@ async function uploadServiceByName(name, buffer, ext, mime) {
     case 'litterbox': return await uploadLitterbox(buffer, ext, mime)
     case 'tmpfiles': return await uploadTmpFiles(buffer, ext, mime)
     case 'freeimagehost': return await uploadFreeImageHost(buffer, ext, mime)
-    default: throw new Error('Servicio no soportado')
+    default: throw new Error('ⓘ `Servicio no reconocido. Revisa tus opciones estratégicas.`')
   }
 }
 
+// ⓘ Servicios disponibles - Cada uno tiene su función en el plan
 const SERVICE_LIST = [
-  { key: 'github', label: 'GitHub' },
-  { key: 'catbox', label: 'Catbox' },
-  { key: 'postimages', label: 'PostImages' },
-  { key: 'litterbox', label: 'Litterbox (24h)' },
-  { key: 'tmpfiles', label: 'TmpFiles' },
-  { key: 'freeimagehost', label: 'FreeImageHost' },
-  { key: 'all', label: 'Todos los servicios' }
+  { key: 'github', label: 'ⓘ `Archivo Permanente Imperial`', description: 'Almacenamiento estratégico a largo plazo' },
+  { key: 'catbox', label: 'ⓘ `Depósito Rápido`', description: 'Transferencia inmediata de recursos' },
+  { key: 'postimages', label: 'ⓘ `Galería de Inteligencia`', description: 'Visualización y análisis de imágenes' },
+  { key: 'litterbox', label: 'ⓘ `Almacén Temporal (24h)`', description: 'Información de corta duración' },
+  { key: 'tmpfiles', label: 'ⓘ `Documentos de Misión`', description: 'Archivos operativos temporales' },
+  { key: 'freeimagehost', label: 'ⓘ `Hosting Público`', description: 'Distribución masiva de contenido' },
+  { key: 'all', label: 'ⓘ `Protocolo de Saturación`', description: 'Todos los servicios simultáneamente' }
 ]
 
 async function sendChooser(m, conn, usedPrefix) {
@@ -127,20 +129,42 @@ async function sendChooser(m, conn, usedPrefix) {
     const device = await getDevice(m.key.id)
     if (device !== 'desktop' && device !== 'web') {
       const media = await prepareWAMessageMedia({ image: { url: avatarUrl } }, { upload: conn.waUploadToServer })
-      const rows = SERVICE_LIST.map(s => ({ header: s.label, title: 'Tourl', description: 'Seleccionar servicio', id: `${usedPrefix}tourl ${s.key}` }))
+      const rows = SERVICE_LIST.map(s => ({ 
+        header: s.label, 
+        title: 'Sistema de Archivos Imperial', 
+        description: s.description, 
+        id: `${usedPrefix}tourl ${s.key}` 
+      }))
       const interactiveMessage = {
-        body: { text: 'Elige el servicio de subida:' },
-        footer: { text: `${global.dev || ''}`.trim() },
-        header: { title: 'Tourl', hasMediaAttachment: true, imageMessage: media.imageMessage },
-        nativeFlowMessage: { buttons: [ { name: 'single_select', buttonParamsJson: JSON.stringify({ title: 'Servicios', sections: [ { title: 'Opciones', rows } ] }) } ], messageParamsJson: '' }
+        body: { text: 'ⓘ `Selecciona el protocolo de subida imperial:`' },
+        footer: { text: 'ⓘ `Cada elección afecta la estrategia final. Elige con precisión.`' },
+        header: { title: 'SISTEMA DE ARCHIVOS IMPERIAL', hasMediaAttachment: true, imageMessage: media.imageMessage },
+        nativeFlowMessage: { 
+          buttons: [ { 
+            name: 'single_select', 
+            buttonParamsJson: JSON.stringify({ 
+              title: 'Protocolos Disponibles', 
+              sections: [ { 
+                title: 'ⓘ `Opciones Estratégicas`', 
+                rows 
+              } ] 
+            }) 
+          } ], 
+          messageParamsJson: '' 
+        }
       }
       const msg = generateWAMessageFromContent(m.chat, { viewOnceMessage: { message: { interactiveMessage } } }, { userJid: conn.user.jid, quoted: fkontak })
       await conn.relayMessage(m.chat, msg.message, { messageId: msg.key.id })
       return true
     }
   } catch {}
-  const list = SERVICE_LIST.map(s => `• ${usedPrefix}tourl ${s.key}`).join('\n')
-  await conn.sendMessage(m.chat, { text: `Elige el servicio de subida:\n\n${list}` }, { quoted: fkontak })
+  const list = SERVICE_LIST.map(s => `ⓘ \`${usedPrefix}tourl ${s.key}\` - ${s.description}`).join('\n')
+  await conn.sendMessage(m.chat, { 
+    text: `ⓘ \`SISTEMA DE SUBIDA IMPERIAL\` 📁\n\n` +
+          `ⓘ \`Selecciona un protocolo:\`\n\n` +
+          `${list}\n\n` +
+          `ⓘ \`La elección correcta maximiza la eficiencia operativa.\`` 
+  }, { quoted: fkontak })
   return true
 }
 
@@ -150,48 +174,109 @@ async function doUpload(m, conn, serviceKey) {
   const sessKey = m.chat + ':' + m.sender
   let fromCache = tourSessions.get(sessKey)
   let buffer, mime
+  
   if (fromCache && fromCache.buffer) {
     buffer = fromCache.buffer
     mime = fromCache.mime || ''
   } else {
     const q = m.quoted ? (m.quoted.msg || m.quoted) : m
     mime = (q.mimetype || q.mediaType || q.mtype || '').toString().toLowerCase()
+    
     if (!/image|video|audio|sticker|document/.test(mime)) {
-      await conn.reply(m.chat, 'Responde a una imagen / video / audio / documento', m)
+      await conn.reply(m.chat, 
+        `ⓘ \`ARCHIVO NO COMPATIBLE\` ⚠️\n\n` +
+        `ⓘ \`Responde a una imagen, video, audio, sticker o documento.\`\n` +
+        `ⓘ \`Solo archivos estratégicos son procesados por el sistema.\``, 
+        m
+      )
       return true
     }
+    
     buffer = await q.download()
   }
-  if (!buffer || !buffer.length) { await conn.reply(m.chat, 'No se pudo descargar el archivo', m); return true }
+  
+  if (!buffer || !buffer.length) { 
+    await conn.reply(m.chat, 
+      `ⓘ \`FALLO EN DESCARGA\` ❌\n\n` +
+      `ⓘ \`No se pudo obtener el archivo del objetivo.\`\n` +
+      `ⓘ \`Verifica la integridad del recurso e intenta nuevamente.\``, 
+      m
+    )
+    return true 
+  }
+  
   const sizeBytes = buffer.length
-  if (sizeBytes > 1024 * 1024 * 1024) { await conn.reply(m.chat, 'El archivo supera 1GB', m); return true }
+  if (sizeBytes > 1024 * 1024 * 1024) { 
+    await conn.reply(m.chat, 
+      `ⓘ \`ARCHIVO DEMASIADO GRANDE\` 🚫\n\n` +
+      `ⓘ \`El archivo supera 1GB de capacidad.\`\n` +
+      `ⓘ \`Límite estratégico: 1GB por operación.\``, 
+      m
+    )
+    return true 
+  }
+  
   const humanSize = formatBytes(sizeBytes)
   const typeInfo = await fileTypeFromBuffer(buffer) || {}
   const { ext, mime: realMime } = typeInfo
 
   let results = []
+  
+  // ⓘ Protocolo de saturación - Todos los servicios
   if ((serviceKey || '').toLowerCase() === 'all') {
     for (const svc of SERVICE_LIST.filter(s => s.key !== 'all')) {
       try {
         const url = await uploadServiceByName(svc.key, buffer, ext, realMime)
         if (url) results.push({ name: svc.label, url, size: humanSize })
-      } catch {}
+      } catch {
+        // ⓘ Fallo silencioso - Parte de la estrategia
+      }
     }
   } else {
+    // ⓘ Protocolo específico
     const pick = SERVICE_LIST.find(s => s.key === (serviceKey || '').toLowerCase())
-    if (!pick) { await conn.reply(m.chat, 'Servicio inválido', m); return true }
+    if (!pick) { 
+      await conn.reply(m.chat, 
+        `ⓘ \`PROTOCOLO INVÁLIDO\` ❌\n\n` +
+        `ⓘ \`Servicio no reconocido por el sistema imperial.\`\n` +
+        `ⓘ \`Usa ${usedPrefix}tourl para ver opciones disponibles.\``, 
+        m
+      )
+      return true 
+    }
+    
     try {
       const url = await uploadServiceByName(pick.key, buffer, ext, realMime)
       if (url) results.push({ name: pick.label, url, size: humanSize })
-    } catch (e) { await conn.reply(m.chat, `Error: ${e.message}`, m); return true }
+    } catch (e) { 
+      await conn.reply(m.chat, 
+        `ⓘ \`ERROR ESTRATÉGICO\` ⚠️\n\n` +
+        `ⓘ \`Fallo en protocolo ${pick.label}:\`\n` +
+        `ⓘ \`${e.message}\`\n\n` +
+        `ⓘ \`Recalculando opciones alternativas.\``, 
+        m
+      )
+      return true 
+    }
   }
 
-  if (!results.length) { await conn.reply(m.chat, 'No se obtuvo ninguna URL', m); return true }
+  if (!results.length) { 
+    await conn.reply(m.chat, 
+      `ⓘ \`OPERACIÓN FALLIDA\` ❌\n\n` +
+      `ⓘ \`No se generaron enlaces de acceso.\`\n` +
+      `ⓘ \`Todos los protocolos reportaron fallos. Revisar conexión.\``, 
+      m
+    )
+    return true 
+  }
 
-  let txt = '💫  L I N K S - E N L A C E S 💫\n\n'
+  let txt = `ⓘ \`OPERACIÓN DE SUBIDA COMPLETADA\` ✅\n\n`
   for (const r of results) {
-    txt += `*${r.name}*\n• Enlace: ${r.url}\n• Tamaño: ${r.size}\n\n`
+    txt += `${r.name}\n`
+    txt += `ⓘ \`Enlace de acceso:\` ${r.url}\n`
+    txt += `ⓘ \`Tamaño del recurso:\` ${r.size}\n\n`
   }
+  txt += `ⓘ \`Todos los enlaces generados según el plan. Recursos disponibles para distribución.\` 📁`
 
   let fkontak = await makeFkontak()
   if (!fkontak) fkontak = m
@@ -201,41 +286,72 @@ async function doUpload(m, conn, serviceKey) {
     if (/image/.test(mime)) mediaHeader = await prepareWAMessageMedia({ image: buffer }, { upload: conn.waUploadToServer })
   } catch {}
 
-  const buttons = results.map(r => ({ name: 'cta_copy', buttonParamsJson: JSON.stringify({ display_text: `Copiar ${r.name}`, copy_code: r.url }) }))
+  const buttons = results.map(r => ({ 
+    name: 'cta_copy', 
+    buttonParamsJson: JSON.stringify({ 
+      display_text: `ⓘ Copiar ${r.name.split('`')[1] || 'Enlace'}`, 
+      copy_code: r.url 
+    }) 
+  }))
+  
   const interactiveMessage = {
     body: { text: txt },
-    footer: { text: 'Toca un botón para copiar.' },
-    header: { title: 'Enlaces generados', hasMediaAttachment: !!mediaHeader?.imageMessage, imageMessage: mediaHeader?.imageMessage },
+    footer: { text: 'ⓘ Selecciona un botón para copiar el enlace estratégico.' },
+    header: { title: 'ENLACES IMPERIALES GENERADOS', hasMediaAttachment: !!mediaHeader?.imageMessage, imageMessage: mediaHeader?.imageMessage },
     nativeFlowMessage: { buttons, messageParamsJson: '' }
   }
+  
   const msg = generateWAMessageFromContent(m.chat, { viewOnceMessage: { message: { interactiveMessage } } }, { userJid: conn.user.jid, quoted: fkontak })
   await conn.relayMessage(m.chat, msg.message, { messageId: msg.key.id })
+  
   try { tourSessions.delete(sessKey) } catch {}
   return true
 }
 
 let handler = async (m, { conn, args, usedPrefix }) => {
   const service = (args[0] || '').toLowerCase()
+  
   if (!service) {
-    // Capturar y cachear el medio antes de mostrar el selector
+    // ⓘ Fase de reconocimiento - Identificar el recurso objetivo
     const q = m.quoted ? (m.quoted.msg || m.quoted) : m
     const mime = (q.mimetype || q.mediaType || q.mtype || '').toString().toLowerCase()
+    
     if (!/image|video|audio|sticker|document/.test(mime)) {
-      await conn.reply(m.chat, '*Responde a una imagen / video / audio / documento*', m)
+      await conn.reply(m.chat, 
+        `ⓘ \`RECONOCIMIENTO FALLIDO\` 🔍\n\n` +
+        `ⓘ \`Responde a un archivo compatible:\`\n` +
+        `ⓘ \`Imagen / Video / Audio / Sticker / Documento\`\n\n` +
+        `ⓘ \`El sistema solo procesa recursos estratégicos.\``, 
+        m
+      )
       return true
     }
+    
     const buffer = await q.download()
-    if (!buffer || !buffer.length) { await conn.reply(m.chat, 'No se pudo descargar el archivo', m); return true }
+    if (!buffer || !buffer.length) { 
+      await conn.reply(m.chat, 
+        `ⓘ \`ERROR EN ADQUISICIÓN\` ⚠️\n\n` +
+        `ⓘ \`No se pudo obtener el recurso del objetivo.\`\n` +
+        `ⓘ \`Verifica la disponibilidad e intenta nuevamente.\``, 
+        m
+      )
+      return true 
+    }
+    
+    // ⓘ Almacenamiento temporal para planificación
     const sessKey = m.chat + ':' + m.sender
     tourSessions.set(sessKey, { buffer, mime, ts: Date.now() })
+    
     return sendChooser(m, conn, usedPrefix)
   }
+  
+  // ⓘ Ejecutar protocolo seleccionado
   return doUpload(m, conn, service)
 }
 
 handler.help = ['tourl']
 handler.tags = ['tools']
-handler.command = /^(tourl|upload)$/i
+handler.command = /^(tourl|upload|subirimagen|archivoimperial)$/i
 
 handler.before = async function (m, { conn, usedPrefix }) {
   try {
@@ -261,7 +377,9 @@ handler.before = async function (m, { conn, usedPrefix }) {
       return await doUpload(m, conn, mTourl[1].toLowerCase())
     }
     return false
-  } catch { return false }
+  } catch { 
+    return false 
+  }
 }
 
 export default handler
