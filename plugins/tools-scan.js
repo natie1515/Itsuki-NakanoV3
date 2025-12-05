@@ -1,11 +1,10 @@
 import fs from 'fs'
 import path from 'path'
 
-var handler = async (m, conn ) => {
+var handler = async (m, conn) => {
     try {
-        await m.react('🕒')
-        //conn.sendPresenceUpdate('composing', m.chat)
-
+        await m.react('⏳')
+        
         const scanTargets = {
             plugins: './plugins',
             lib: './lib',
@@ -16,19 +15,19 @@ var handler = async (m, conn ) => {
             utils: './utils'
         }
 
-        let response = '✧ *Resultado del Escaneo:*\n\n'
+        let response = 'ⓘ *Resultado del escaneo, mi señor.*\n\n'
         let hasErrors = false
 
         for (const [targetName, targetPath] of Object.entries(scanTargets)) {
             if (!fs.existsSync(targetPath)) continue
 
             if (fs.lstatSync(targetPath).isDirectory()) {
-                response += `📂 *Directorio:* ${targetName}\n`
+                response += `ⓘ *Directorio:* ${targetName}\n`
                 const files = fs.readdirSync(targetPath)
                     .filter(file => file.endsWith('.js') || file.endsWith('.json'))
 
                 if (files.length === 0) {
-                    response += `📁 Carpeta vacía\n\n`
+                    response += `ⓘ Carpeta vacía\n\n`
                     continue
                 }
 
@@ -36,7 +35,7 @@ var handler = async (m, conn ) => {
                     await scanFile(path.join(targetPath, file), file, targetName)
                 }
             } else {
-                response += `📄 *Archivo:* ${targetName}\n`
+                response += `ⓘ *Archivo:* ${targetName}\n`
                 await scanFile(targetPath, targetName, 'root')
             }
         }
@@ -52,31 +51,31 @@ var handler = async (m, conn ) => {
                     const stackLines = error.stack?.split('\n') || []
                     const errorLineMatch = stackLines[0]?.match(/:(\d+):\d+/)
                     const errorLine = errorLineMatch ? errorLineMatch[1] : 'Desconocido'
-                    response += `\n⚠️ *Error en:* ${fileName}\n`
-                    response += `> ● Tipo: ${error.name}\n`
-                    response += `> ● Mensaje: ${error.message}\n`
-                    response += `> ● Línea: ${errorLine}\n`
+                    response += `\n⚠️ *Error detectado en:* ${fileName}\n`
+                    response += `> ⓘ Tipo: ${error.name}\n`
+                    response += `> ⓘ Mensaje: ${error.message}\n`
+                    response += `> ⓘ Línea: ${errorLine}\n`
                 }
 
                 if (!hasErrors) {
-                    response += `✅ ${fileName} - Sin errores detectados\n`
+                    response += `✅ ${fileName} - Sin errores\n`
                 }
                 response += '\n'
             } catch (err) {
-                response += `\n‼️ *Error al escanear:* ${fileName}\n`
-                response += `> ● ${err.message}\n\n`
+                response += `\n‼️ *Error en escaneo:* ${fileName}\n`
+                response += `> ⓘ ${err.message}\n\n`
             }
         }
 
         if (!hasErrors) {
-            response = '❀ ¡Todo está en orden! No se detectaron errores.'
+            response = 'ⓘ *Todo está en orden, mi señor. El sistema funciona correctamente.* ✅'
         }
 
         await m.reply(response)
         await m.react(hasErrors ? '⚠️' : '✅')
     } catch (err) {
         await m.react('✖️')
-        await m.reply(`‼️ Error en el escaneo: ${err.message}`)
+        await m.reply(`ⓘ Error crítico en el escaneo, mi señor: ${err.message}`)
     }
 }
 
