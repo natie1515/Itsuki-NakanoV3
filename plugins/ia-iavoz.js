@@ -1,11 +1,11 @@
 import fetch from 'node-fetch'
 
 let handler = async (m, { conn, text }) => {
-  if (!text) return m.reply('Escribe algo')
+  if (!text) return m.reply('🧀 *Escribe algo*')
   
   const key = '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'
   
-  // 1. Groq IA
+  // 1. Groq IA (funciona)
   const res = await fetch('https://api.groq.com/openai/v1/chat/completions', {
     method: 'POST',
     headers: {
@@ -14,35 +14,34 @@ let handler = async (m, { conn, text }) => {
     },
     body: JSON.stringify({
       model: 'llama-3.3-70b-versatile',
-      messages: [{ role: 'user', content: text }],
-      max_tokens: 20
+      messages: [{
+        role: 'system', 
+        content: 'Eres C.C. de Code Geass. Responde breve como ella, habla de contratos y Lelouch.'
+      }, {
+        role: 'user',
+        content: text
+      }],
+      max_tokens: 40
     })
   })
   
-  console.log('Status:', res.status)
   const data = await res.json()
-  console.log('Response:', data)
   
   if (data.error) {
-    m.reply(`Error API: ${data.error.message}`)
-    return
+    return m.reply(`Error IA: ${data.error.message}`)
   }
   
-  const respuesta = data.choices?.[0]?.message?.content || '...'
-  console.log('Respuesta IA:', respuesta)
+  const respuesta = data.choices[0].message.content
   
-  // 2. TTS ALTERNATIVO (no Google)
-  const ttsUrl = `http://api.voicerss.org/?key=demo&hl=es-es&src=${encodeURIComponent(respuesta)}`
-  
-  try {
-    await conn.sendMessage(m.chat, {
-      audio: { url: ttsUrl },
-      mimetype: 'audio/mpeg'
-    }, { quoted: m })
-  } catch (ttsError) {
-    // Si falla TTS, enviar solo texto
-    m.reply(`*C.C. dice:* ${respuesta}\n\n(Audio no disponible)`)
-  }
+  // 2. ENVIAR SOLO TEXTO (no hay TTS gratis que funcione)
+  await conn.reply(m.chat, 
+`┏━━━━━━━━━━━━━━━━━━━━━┓
+┃  🧀 C.C. RESPONDE ┃
+┗━━━━━━━━━━━━━━━━━━━━━┛
+
+> ${respuesta}
+
+"Los contratos a veces son solo palabras."`, m)
 }
 
 handler.command = ['cc']
