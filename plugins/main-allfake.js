@@ -6,15 +6,21 @@ import moment from 'moment-timezone'
 var handler = m => m
 handler.all = async function (m) { 
 
-  // Canales (ID y Nombre del Canal de WhatsApp para la función "getRandomChannel")
-  // ID de tu canal: 0029Va4K0PZ5a245NkngBA2M, con el sufijo @newsletter
+  // ID y Nombre del Canal de WhatsApp para la función "getRandomChannel"
+  const CANAL_ID = "0029Va4K0PZ5a245NkngBA2M@newsletter";
+  const CANAL_NAME = "Lelouch vi Britannia ┇ Comunicados";
+  
+  // Lista de IDs (se deja como array para compatibilidad con la función getRandomChannel)
   global.canalIdM = [
-    "0029Va4K0PZ5a245NkngBA2M@newsletter" // <--- TU ID ALFANUMÉRICO SIN COMAS
+    CANAL_ID
   ]
   global.canalNombreM = [
-    "Lelouch vi Britannia ┇ Comunicados" // <--- NOMBRE DE TU CANAL
+    CANAL_NAME
   ]
-  global.channelRD = await getRandomChannel()
+  
+  // Aseguramos que la variable global de canal se cargue con los datos correctos
+  global.channelRD = { id: CANAL_ID, name: CANAL_NAME }
+  // Opcionalmente: global.channelRD = await getRandomChannel() // Puedes comentar esta línea si la de arriba funciona
 
   // Fecha y hora
   global.d = new Date(new Date + 3600000)
@@ -75,9 +81,9 @@ handler.all = async function (m) {
     contextInfo: { 
       isForwarded: true, 
       forwardedNewsletterMessageInfo: { 
-        newsletterJid: global.channelRD.id, // Usa el ID de la variable cargada
+        newsletterJid: global.channelRD.id, 
         serverMessageId: '', 
-        newsletterName: global.channelRD.name // Usa el nombre de la variable cargada
+        newsletterName: global.channelRD.name 
       }, 
       externalAdReply: { 
         title: "Lelouch vi Britannia",
@@ -86,7 +92,7 @@ handler.all = async function (m) {
         description: null, 
         previewType: "PHOTO", 
         thumbnailUrl: global.icono,
-        sourceUrl: '', // Si el canal tiene un link, a veces va aquí, pero lo dejamos vacío para usar el JID
+        sourceUrl: '',
         mediaType: 1, 
         renderLargerThumbnail: false 
       }
