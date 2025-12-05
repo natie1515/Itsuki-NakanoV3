@@ -21,7 +21,7 @@ let handler = async (m, { conn, usedPrefix: _p }) => {
 
  ִ \`I N F O - B O T\` ! ୧ ֹ 
    
-> ੭੭﹙❐﹚ \`Bot :\` *ItsukiV3*
+> ੭੭﹙❐﹚ \`Bot :\` *LelouchViBritannia*
 > ੭੭﹙❐﹚ \`Ping :\` *${speed} ms*
 > ੭੭﹙❐﹚ \`Uptime :\` *${await getUptime()}*
 > ੭੭﹙❐﹚ \`RAM :\` *${(process.memoryUsage().rss / 1024 / 1024).toFixed(2)}* MB
@@ -32,7 +32,7 @@ let handler = async (m, { conn, usedPrefix: _p }) => {
 `
 
     const categories = {
-      'NAKANO-INFO': ['main', 'info'],
+      'LELOUCH-INFO': ['main', 'info'],
       'INTELIGENCIA': ['bots', 'ia'],
       'JUEGOS': ['game', 'gacha'],
       'ECONOMÍA': ['economy', 'rpgnk'],
@@ -70,14 +70,14 @@ let handler = async (m, { conn, usedPrefix: _p }) => {
         name: 'cta_url',
         buttonParamsJson: JSON.stringify({ 
           display_text: '☃️ Canal Oficial', 
-          url: 'https://whatsapp.com/channel/0029VbBvZH5LNSa4ovSSbQ2N' 
+          url: '' // vacío para que usted ponga su link
         })
       },
       {
         name: 'cta_url',
         buttonParamsJson: JSON.stringify({ 
           display_text: '💻 Hosting Oficial', 
-          url: 'https://dash.quintillisas.com' 
+          url: 'https://dash.quintillisas.com'
         })
       }
     ]
@@ -93,7 +93,6 @@ let handler = async (m, { conn, usedPrefix: _p }) => {
       header = proto.Message.InteractiveMessage.Header.fromObject({ hasMediaAttachment: false })
     }
 
-    // === Crear mensaje interactivo ===
     const interactiveMessage = proto.Message.InteractiveMessage.fromObject({
       body: proto.Message.InteractiveMessage.Body.fromObject({ text: menuText }),
       footer: proto.Message.InteractiveMessage.Footer.fromObject({ text: '' }),
@@ -118,7 +117,6 @@ let handler = async (m, { conn, usedPrefix: _p }) => {
   }
 }
 
-// Quoted especial con mini-thumbnail
 async function makeFkontak() {
   try {
     const res = await fetch('https://cdn.russellxz.click/64bba973.jpg')
@@ -133,7 +131,6 @@ async function makeFkontak() {
   }
 }
 
-// Función para obtener uptime
 async function getUptime() {
   let totalSeconds = process.uptime()
   let hours = Math.floor(totalSeconds / 3600)
@@ -144,6 +141,6 @@ async function getUptime() {
 
 handler.help = ['menu','help']
 handler.tags = ['main']
-handler.command = ['itsuki', 'menu', 'help']
+handler.command = ['Lelouch', 'menu', 'help']
 
 export default handler
