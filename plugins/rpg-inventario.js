@@ -43,7 +43,7 @@ let handler = async (m, { conn, usedPrefix }) => {
         `ⓘ \`Estado Nobiliario:\` ${premium}\n` + 
         `ⓘ \`Última Campaña:\` ${user.lastAdventure ? moment(user.lastAdventure).fromNow() : 'Ninguna registrada'}\n` + 
         `ⓘ \`Fecha del Reporte:\` ${new Date().toLocaleString('es-ES')}\n\n` +
-        `ⓘ \`Los recursos definen el poder. Tu inventario revela tu posición en el tablero.\` ♟️`;
+         ⓘ \`Los recursos definen el poder. Tu inventario revela tu posición en el tablero.\` ♟️`;
 
     // ⓘ Contexto opcional si existe
     if (ctxOk.inventario) {
