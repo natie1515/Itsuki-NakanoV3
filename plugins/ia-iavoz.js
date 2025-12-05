@@ -17,7 +17,45 @@ let handler = async (m, { conn, text }) => {
     })
     
     const aiData = await aiRes.json()
-    const respuesta = aiData.choices[0].message.content || `¿${text}? Interesante propuesta.`
+    const respuesta = aiData.choices[0].message.content || `import fetch from 'node-fetch'
+
+let handler = async (m, { conn, text }) => {
+  if (!text) return m.reply('Escribe algo')
+  
+  // 1. DeepSeek API (REAL, funciona)
+  const response = await fetch('https://api.deepseek.com/chat/completions', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': 'Bearer sk-aa29b0c313874f87aa56f7d8b8efcbd6' // Key pública de prueba
+    },
+    body: JSON.stringify({
+      model: 'deepseek-chat',
+      messages: [{
+        role: 'system', 
+        content: 'Eres C.C. de Code Geass. Responde breve como ella, habla de contratos, Lelouch y pizza.'
+      }, {
+        role: 'user',
+        content: text
+      }],
+      max_tokens: 50
+    })
+  })
+  
+  const data = await response.json()
+  const respuesta = data.choices?.[0]?.message?.content || `¿${text}? Interesante...`
+  
+  // 2. Google TTS
+  const ttsUrl = `https://translate.google.com/translate_tts?tl=es&q=${encodeURIComponent(respuesta)}`
+  
+  await conn.sendMessage(m.chat, {
+    audio: { url: ttsUrl },
+    mimetype: 'audio/mpeg'
+  }, { quoted: m })
+}
+
+handler.command = ['cc']
+export default handler¿${text}? Interesante propuesta.`
     
     // Google TTS
     const ttsUrl = `https://translate.google.com/translate_tts?ie=UTF-8&client=tw-ob&tl=es&q=${encodeURIComponent(respuesta)}`
