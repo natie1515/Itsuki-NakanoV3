@@ -1,6 +1,6 @@
 let handler = async (m, { conn, usedPrefix, isROwner }) => {
     // Solo el creador puede usar este comando
-    if (!isROwner) return m.reply('> ⓘ Este comando solo puede ser ejecutado por el Creador del bot, mi señor.')
+    if (!isROwner) return m.reply('> ⓘ Este comando solo puede ser ejecutado por mi creador.')
 
     let chat = global.db.data.chats[m.chat]
 
