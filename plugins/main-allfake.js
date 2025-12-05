@@ -3,22 +3,13 @@ import fetch from 'node-fetch'
 import axios from 'axios'
 import moment from 'moment-timezone'
 
-var handler = m => m
-handler.all = async function (m) { 
-
-  // ID y Nombre del Canal de WhatsApp (TU CANAL)
-  const CANAL_ID = "0029Va4K0PZ5a245NkngBA2M@newsletter";
-  const CANAL_NAME = "Lelouch vi Britannia ┇ Comunicados";
-  
-  // Lista de IDs: Usaremos tu ID. Asegúrate de que este ID sí funciona con los mensajes
-  // de vista previa de canal, ya que es alfanumérico.
-  global.canalIdM = [
-    CANAL_ID
-  ]
-  global.canalNombreM = [
-    CANAL_NAME
-  ]
-  
+global.canalIdM = [
+  "120363404434164076@newsletter",
+  "120363403726798403@newsletter",
+  "120363425526390282@newsletter",
+  "120363404434164076@newsletter"
+]
+ 
   // RESTAURAMOS la llamada a la función async que usa el código que funciona.
   global.channelRD = await getRandomChannel() 
   // NOTA: La función 'getRandomChannel' está definida al final de este archivo.
