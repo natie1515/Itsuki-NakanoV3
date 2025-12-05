@@ -3,16 +3,29 @@ import fetch from 'node-fetch'
 import axios from 'axios'
 import moment from 'moment-timezone'
 
-global.canalIdM = [
-  "120363404434164076@newsletter",
-  "120363403726798403@newsletter",
-  "120363425526390282@newsletter",
-  "120363404434164076@newsletter"
-]
- 
+var handler = m => m
+handler.all = async function (m) { 
+
+  // >>> INICIO: Configuración del Canal - Se usan IDs NUMÉRICOS para asegurar compatibilidad <<<
+  // NOTA: Tu bot solo acepta IDs en formato numérico (los que terminan en @newsletter).
+  // Si deseas usar un canal específico, debes buscar el ID numérico interno de ese canal.
+  global.canalIdM = [
+    "120363404434164076@newsletter", // ID Numérico de ejemplo 1
+    "120363403726798403@newsletter", // ID Numérico de ejemplo 2
+    "120363425526390282@newsletter", // ID Numérico de ejemplo 3
+    "120363404434164076@newsletter"  // ID Numérico de ejemplo 4
+  ]
+  global.canalNombreM = [
+    "Lelouch vi Britannia ┇ Comunicados", // Tu nombre de canal, duplicado para compatibilidad
+    "Lelouch vi Britannia ┇ Comunicados",
+    "Lelouch vi Britannia ┇ Comunicados",
+    "Lelouch vi Britannia ┇ Comunicados"
+  ]
+  
   // RESTAURAMOS la llamada a la función async que usa el código que funciona.
   global.channelRD = await getRandomChannel() 
   // NOTA: La función 'getRandomChannel' está definida al final de este archivo.
+  // >>> FIN: Configuración del Canal <<<
 
   // Fecha y hora
   global.d = new Date(new Date + 3600000)
@@ -117,10 +130,8 @@ async function getRandomChannel() {
   let id = global.canalIdM[randomIndex]
   let name = global.canalNombreM[randomIndex]
   
-  // Aseguramos que el ID tenga el sufijo @newsletter (aunque ya lo pusiste bien)
-  let fullId = id.includes("@newsletter") ? id : id + "@newsletter" 
-  
-  return { id: fullId, name } 
+  // No necesitamos asegurar el sufijo, ya que los IDs numéricos ya lo tienen en este formato.
+  return { id, name } 
 }
 
 if (!Array.prototype.getRandom) {
