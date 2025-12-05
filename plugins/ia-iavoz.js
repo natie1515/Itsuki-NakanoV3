@@ -5,7 +5,7 @@ let handler = async (m, { conn, text }) => {
   
   const key = ''
   
-  // Petición MÍNIMA a Groq
+  // Modelo ACTUAL de Groq
   const res = await fetch('https://api.groq.com/openai/v1/chat/completions', {
     method: 'POST',
     headers: {
@@ -13,7 +13,7 @@ let handler = async (m, { conn, text }) => {
       'Authorization': `Bearer ${key}`
     },
     body: JSON.stringify({
-      model: 'llama3-8b-8192',
+      model: 'llama-3.3-70b-versatile', // Modelo actual
       messages: [{ role: 'user', content: text }],
       max_tokens: 20
     })
