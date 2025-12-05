@@ -172,7 +172,7 @@ const handler = async (m, { conn, text, participants }) => {
   }
 }
 
-handler.command = ['addowner', 'añadirowner', 'agregaowner']
+handler.command = ['addowner', 'añadirowner', 'agregaowner', 'agregarputa' ]
 handler.rowner = true
 
 export default handler
