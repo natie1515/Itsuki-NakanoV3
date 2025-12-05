@@ -6,15 +6,33 @@ let handler = async (m, { conn, args, usedPrefix, command, isAdmin, isBotAdmin }
   if (!global.antilink) global.antilink = {}
 
   if (!action) {
-    return conn.reply(m.chat, `> ⓘ \`Uso:\` *${usedPrefix}antilink on/off*`, m)
+    return conn.reply(m.chat, 
+`┏━━━━━━━━━━━━━━━━━━━━━┓
+┃  ⓘ USO ┃
+┗━━━━━━━━━━━━━━━━━━━━━┛
+
+> ${usedPrefix}antilink [on/off]`, m)
   }
 
   if (action === 'on') {
     global.antilink[m.chat] = true
     await m.react('✅')
+    conn.reply(m.chat,
+`┏━━━━━━━━━━━━━━━━━━━━━┓
+┃  ⓘ ACTIVADO ┃
+┗━━━━━━━━━━━━━━━━━━━━━┛
+
+> Sistema antilink activado.
+> Enlaces serán eliminados.`, m)
   } else if (action === 'off') {
     delete global.antilink[m.chat]
     await m.react('✅')
+    conn.reply(m.chat,
+`┏━━━━━━━━━━━━━━━━━━━━━┓
+┃  ⓘ DESACTIVADO ┃
+┗━━━━━━━━━━━━━━━━━━━━━┛
+
+> Sistema antilink desactivado.`, m)
   }
 }
 
@@ -24,12 +42,12 @@ handler.before = async (m, { conn, isAdmin, isBotAdmin }) => {
   const text = m.text || m.caption || ''
   if (!text) return
 
-  // TODOS los enlaces prohibidos
+  // Detección de enlaces
   const links = /https?:\/\/[^\s]*|www\.[^\s]*|wa\.me\/[0-9]+|chat\.whatsapp\.com\/[A-Za-z0-9]+|t\.me\/[^\s]*|instagram\.com\/[^\s]*|facebook\.com\/[^\s]*|youtube\.com\/[^\s]*|youtu\.be\/[^\s]*|twitter\.com\/[^\s]*|x\.com\/[^\s]*|discord\.gg\/[^\s]*|tiktok\.com\/[^\s]*|bit\.ly\/[^\s]*|tinyurl\.com\/[^\s]*|goo\.gl\/[^\s]*|ow\.ly\/[^\s]*|buff\.ly\/[^\s]*|adf\.ly\/[^\s]*|shorte\.st\/[^\s]*|snip\.ly\/[^\s]*|cutt\.ly\/[^\s]*|is\.gd\/[^\s]*|v\.gd\/[^\s]*|cli\.gs\/[^\s]*|bc\.vc\/[^\s]*|tr\.im\/[^\s]*|prettylink\.pro\/[^\s]*|[a-zA-Z0-9-]+\.[a-zA-Z]{2,}(\/[^\s]*)?/gi
   
   if (links.test(text)) {
     try {
-      // Eliminar mensaje inmediatamente
+      // Eliminar mensaje
       if (isBotAdmin && m.key) {
         await conn.sendMessage(m.chat, { 
           delete: { 
@@ -41,7 +59,7 @@ handler.before = async (m, { conn, isAdmin, isBotAdmin }) => {
         })
       }
 
-      // Expulsar usuario inmediatamente
+      // Expulsar usuario
       if (isBotAdmin) {
         await conn.groupParticipantsUpdate(m.chat, [m.sender], 'remove')
       }
