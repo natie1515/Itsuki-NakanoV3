@@ -70,7 +70,7 @@ let handler = async (m, { conn, usedPrefix: _p }) => {
         name: 'cta_url',
         buttonParamsJson: JSON.stringify({ 
           display_text: '☃️ Canal Oficial', 
-          url: '' // vacío para que usted ponga su link
+          url: 'https://whatsapp.com/channel/0029VaCDajZ9WtBvBZy76k2h' // vacío para que usted ponga su link
         })
       },
       {
