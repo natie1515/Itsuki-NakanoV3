@@ -21,7 +21,7 @@ global.retirado = [
 // Configuraciones principales
 global.roowner = ['559296077349', '51932884973']
 global.owner = [
-   ['51932884973', 'Ruby-Bot', true],
+   ['559296077349', '𓆩‌۫᷼ ִֶָღ݉͢𝓢𝓪𝓻𝓪𝓱𓆪‌', true],
    ['51906278352', 'Root-Botnet  🦇🩸', true],
    
    ];
@@ -44,7 +44,7 @@ global.ItsukiJadibts = true
 global.Choso = true
 global.prefix = ['.', '!', '/' , '#', '%']
 global.apikey = 'ItsukiNakanoIA'
-global.botNumber = '51932884973'
+global.botNumber = ''
 // Números y settings globales para varios códigos
 global.packname = '𝗟𝗮 𝗠𝗲𝗷𝗼𝗿 𝗕𝗼𝘁 𝗗𝗲 𝗪𝗵𝗮𝘁𝘀𝗮𝗽𝗽 🫰🏻🤖'
 global.botname = '🧋 Y͟u͟m͟ï̵̬͟͜𝐁o̸t̸ - 𝐍 𝐄 𝐖 ❄️'
