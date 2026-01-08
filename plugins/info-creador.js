@@ -4,23 +4,23 @@ let handler = async (m, { conn }) => {
   try {
     await conn.sendMessage(m.chat, { react: { text: '👑', key: m.key } })
 
-    const menuText = `> *@Hola, soy Jared, Owner de Lelouch Vi Britanna V3*\n\n> ᴇʟɪɢᴇ ᴄóᴍᴏ ǫᴜɪᴇʀᴇs ᴄᴏɴᴛᴀᴄᴛᴀʀᴍᴇ :`
+    const menuText = `> *@Hola, soy 𓆩‌۫᷼ ִֶָღ݉͢𝓢𝓪𝓻𝓪𝓱𓆪‌, Owner de Y͟u͟m͟ï̵̬͟͜𝐁o̸t̸ V3*\n\n> ᴇʟɪɢᴇ ᴄóᴍᴏ ǫᴜɪᴇʀᴇs ᴄᴏɴᴛᴀᴄᴛᴀʀᴍᴇ :`
 
-    const imageUrl = 'https://cdn.russellxz.click/892b3d23.jpg'
+    const imageUrl = 'https://i.postimg.cc/76JgSYTK/615d6330db9a6e48977bcc4f9e4d0b4e.jpg'
 
     const nativeButtons = [
       {
         name: 'cta_url',
         buttonParamsJson: JSON.stringify({ 
           display_text: 'Instagram 📸', 
-          url: 'https://www.instagram.com/jared.nnnnn'  // ← Instagram actualizado
+          url: 'https://www.instagram.com/leonela.y14?igsh=ZDhlZHFsNzh4eXo='  // ← Instagram actualizado
         })
       },
       {
         name: 'cta_url',
         buttonParamsJson: JSON.stringify({ 
           display_text: 'Owner 👑', 
-          url: 'https://wa.me/593994524688'
+          url: 'https://wa.me/559296077349'
         })
       }
     ]
