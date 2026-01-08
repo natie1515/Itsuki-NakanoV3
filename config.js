@@ -6,48 +6,57 @@ import * as cheerio from 'cheerio'
 import fetch from 'node-fetch'
 import axios from 'axios'
 import moment from 'moment-timezone'
-import { dirname } from 'path'
+import { dirname } from 'path' 
 
 global.__dirname = (url) => dirname(fileURLToPath(url));
 
-// Configuraciones principales
-global.roowner = ['593994524688']
-global.owner = [
-   ['593994524688', 'Jared', true], // Único dueño
+
+//aquí los retirados👑🥀
+global.retirado = [
+['51906278352','Root-Botnet',true]
 ];
 
-global.mods = []
-global.suittag = []
-global.prems = []
+/*habrán comandos especiales para los retirados algo q los identifique | nota ustedes pondrán los coamndos y q solo funcione para los retirados*/
 
-// Información del bot
+// Configuraciones principales
+global.roowner = ['559296077349', '51932884973']
+global.owner = [
+   ['51932884973', 'Ruby-Bot', true],
+   ['51906278352', 'Root-Botnet  🦇🩸', true],
+   
+   ];
+
+global.mods = ['51906278352', '51932884973']
+global.suittag = ['51906278352', '51932884973']
+global.prems = ['51906278352', '51932884973']
+
+// Información del bot 
 global.libreria = 'Baileys'
 global.baileys = 'V 6.7.9'
 global.languaje = 'Español'
 global.vs = '7.5.2'
 global.vsJB = '5.0'
-global.nameqr = 'Itsukiqr'
-global.namebot = 'Itsuki-IA'
+global.nameqr = 'Y͟u͟m͟ï̵̬͟͜𝐁o̸t̸qr'
+global.namebot = 'Y͟u͟m͟ï̵̬͟͜𝐁o̸t̸'
 global.sessions = "Sessions/Principal"
 global.jadi = "Sessions/SubBot"
 global.ItsukiJadibts = true
 global.Choso = true
-global.prefix = ['.', '!', '/', '#', '%']
+global.prefix = ['.', '!', '/' , '#', '%']
 global.apikey = 'ItsukiNakanoIA'
-global.botNumber = '18482389332'
-
-// Datos estéticos del bot
-global.packname = 'Itsuki Whatsapp Bot'
-global.botname = 'Itsuki-IA'
-global.wm = '© Jared'
-global.wm3 = 'Multi-Device'
-global.author = 'Creado por Jared'
-global.dev = 'Owner Jared'
-global.textbot = 'Itsuki-Nakano | IA'
-global.etiqueta = '@Jared'
-global.gt = 'Creado por Jared'
-global.me = 'Itsuki Nakano'
-global.listo = 'Aqui tiene'
+global.botNumber = '51932884973'
+// Números y settings globales para varios códigos
+global.packname = '𝗟𝗮 𝗠𝗲𝗷𝗼𝗿 𝗕𝗼𝘁 𝗗𝗲 𝗪𝗵𝗮𝘁𝘀𝗮𝗽𝗽 🫰🏻🤖'
+global.botname = '🧋 Y͟u͟m͟ï̵̬͟͜𝐁o̸t̸ - 𝐍 𝐄 𝐖 ❄️'
+global.wm = '© Root'
+global.wm3 = '⫹⫺ 𝙈𝙪𝙡𝙩𝙞-𝘿𝙚𝙫𝙞𝙘𝙚 💻'
+global.author = '© ⍴᥆ᥕᥱrᥱძ ᑲᥡ 𓆩‌۫᷼ ִֶָღ݉͢𝓢𝓪𝓻𝓪𝓱𓆪‌‹࣭݊𓂃ⷪ ִֶָ ᷫ‹ ⷭ.࣭𓆩‌۫᷼Ⴕ۫͜𓆪‌'
+global.dev = '© ⍴᥆ᥕᥱrᥱძ ᑲᥡ 𓆩‌۫᷼ ִֶָღ݉͢𝓢𝓪𝓻𝓪𝓱𓆪‌‹࣭݊𓂃ⷪ ִֶָ ᷫ‹ ⷭ.࣭𓆩‌۫᷼Ⴕ۫͜𓆪‌'
+global.textbot = 'Y͟u͟m͟ï̵̬͟͜𝐁o̸t̸|IAV3 Root'
+global.etiqueta = '@Root-𓆩‌۫᷼ ִֶָღ݉͢𝓢𝓪𝓻𝓪𝓱𓆪‌'
+global.gt = '© 𝐂𝐫𝐞𝐚𝐝𝐨 𝐏𝐨𝐫 𓆩‌۫᷼ ִֶָღ݉͢𝓢𝓪𝓻𝓪𝓱𓆪‌ Y͟u͟m͟ï̵̬͟͜𝐁o̸t̸-𝐂𝐡𝐚𝐧 𝐓𝐡𝐞 𝐁𝐞𝐬𝐭 𝐁𝐨𝐭𝐬 𝐎𝐟 𝐖𝐡𝐚𝐭𝐬𝐚𝐩𝐩 🤖👑'
+global.me = '🌨️ Y͟u͟m͟ï̵̬͟͜𝐁o̸t̸ 𝙼𝙴𝚆 𝚄𝙿𝙳𝙰𝚃𝙴 ☃️'
+global.listo = '*Aqui tiene*'
 global.moneda = 'Yenes'
 global.multiplier = 69
 global.maxwarn = 3
@@ -57,21 +66,21 @@ global.fetch = fetch
 global.axios = axios
 global.moment = moment
 
-// Enlaces oficiales del bot (limpios, coloque los suyos si quiere)
-global.gp1 = ''
-global.comunidad1 = ''
-global.channel = ''
-global.channel2 = ''
+// Enlaces oficiales del bot
+global.gp1 = 'https://chat.whatsapp.com/IKY7BgP20J5BYRiRZzINQU'
+global.comunidad1 = 'https://chat.whatsapp.com/FFl5CSUCbBqLVdiRaFVmHp'
+global.channel = 'https://whatsapp.com/channel/0029VaCDajZ9WtBvBZy76k2h'
+global.channel2 = 'https://whatsapp.com/channel/0029VaCDajZ9WtBvBZy76k2h'
 global.md = ''
-global.correo = ''
+global.correo = 'yuminotify.supp@gmail.com'
 
-// APIs
+// Apis para las descargas y más
 global.APIs = {
   ryzen: 'https://api.ryzendesu.vip',
   xteam: 'https://api.xteam.xyz',
   lol: 'https://api.lolhuman.xyz',
   delirius: 'https://delirius-apiofc.vercel.app',
-  siputzx: 'https://api.siputzx.my.id',
+  siputzx: 'https://api.siputzx.my.id', // usado como fallback para sugerencias IA
   mayapi: 'https://mayapi.ooguy.com'
 }
 
@@ -82,13 +91,14 @@ global.APIKeys = {
   'https://mayapi.ooguy.com': 'may-f53d1d49'
 }
 
-// IA
+// Endpoints de IA
 global.SIPUTZX_AI = {
   base: global.APIs?.siputzx || 'https://api.siputzx.my.id',
   bardPath: '/api/ai/bard',
   queryParam: 'query',
   headers: { accept: '*/*' }
 }
+
 
 global.chatDefaults = {
   isBanned: false,
@@ -122,6 +132,7 @@ watchFile(file, () => {
   try { import(pathToFileURL(file).href + `?update=${Date.now()}`) } catch {}
 })
 
+// Configuraciones finales
 export default {
   prefix: global.prefix,
   owner: global.owner,
